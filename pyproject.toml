@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm-evaluation"
+version = "0.1.0"
+description = "Local LLM evaluation with DeepEval and Ollama"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = ["deepeval==4.3.3", "ollama==0.6.3"]
+
+[project.optional-dependencies]
+test = ["pytest==9.2.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+asyncio_default_fixture_loop_scope = "function"
+markers = ["integration: requires a running local Ollama service and downloaded models"]
