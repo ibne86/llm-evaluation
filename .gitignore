@@ -1,0 +1,34 @@
+# Project Python environment
+.venv/
+venv/
+
+# IDE and Python caches
+.idea/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Local configuration and evaluation caches
+.env
+.env.*
+!.env.example
+.deepeval/
+
+# Downloads and generated runs; curated examples remain trackable
+models/
+.ollama/
+data/raw/
+results/runs/
+logs/
+
+# Operating system files
+Thumbs.db
+Desktop.ini
+.DS_Store
