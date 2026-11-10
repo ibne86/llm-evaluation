@@ -1,0 +1,25 @@
+Dataset material: Creative Commons Attribution-ShareAlike 4.0 International
+SPDX identifier: CC-BY-SA-4.0
+License: https://creativecommons.org/licenses/by-sa/4.0/
+Full legal code: https://creativecommons.org/licenses/by-sa/4.0/legalcode
+
+SQuAD 2.0 (2018), Pranav Rajpurkar, Robin Jia, and Percy Liang.
+Official source: https://rajpurkar.github.io/SQuAD-explorer/
+Dataset card: https://huggingface.co/datasets/rajpurkar/squad_v2
+Paper: Know What You Don't Know: Unanswerable Questions for SQuAD
+https://arxiv.org/abs/1806.03822
+
+The SQuAD portions of pilot.json are a selected subset of the publisher's
+dev-v2.0.json. Contexts and questions are preserved without truncation.
+Changes: seeded selection, category labels, deduplicated reference aliases,
+an explicit abstention expectation, and a wrapper with provenance metadata.
+Original identifiers and original answer spans are retained. Source plausible
+answers for impossible questions are provenance only, never reference answers.
+
+The two project-authored custom fixtures are also offered under CC BY-SA 4.0
+so the distributed pilot dataset has a consistent data license. Preserve this
+notice, source attribution, license link, and modification history when sharing
+this dataset or adapted dataset material. No source-author endorsement is implied.
+
+This notice covers dataset material. It does not choose a license for the
+project's software source or downloaded model weights.

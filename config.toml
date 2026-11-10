@@ -1,0 +1,34 @@
+prompt_version = "context-qa-v1"
+rubric_version = "pilot-rubrics-v1"
+dataset = "data/pilot.json"
+host = "http://127.0.0.1:11434"
+timeout_seconds = 120
+
+[answer]
+model = "qwen2.5:1.5b"
+
+[answer.options]
+num_gpu = 0
+num_ctx = 2048
+num_predict = 96
+num_batch = 32
+num_thread = 4
+temperature = 0
+seed = 42
+
+[judge]
+model = "qwen3:4b"
+
+[judge.options]
+num_gpu = 0
+num_ctx = 4096
+num_predict = 256
+num_batch = 16
+num_thread = 4
+temperature = 0
+seed = 42
+
+[thresholds]
+answer_relevancy = 0.7
+correctness = 0.7
+groundedness = 0.8
