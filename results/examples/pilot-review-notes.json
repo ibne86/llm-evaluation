@@ -1,0 +1,47 @@
+{
+  "reviewer": "assistant",
+  "human_labels_collected": false,
+  "grading_prompt_hashes_verified": 20,
+  "original_results_sha256": "9fa08026318d5de5c05b6fe597a35150c4206b0fc68969796af6940ccb451512",
+  "findings": [
+    {
+      "case_ids": [
+        "pilot-squad-5ad01f0f77cf76001a686ac3",
+        "pilot-squad-5acf900177cf76001a685281",
+        "pilot-custom-ambiguity-01"
+      ],
+      "type": "observed_abstention_contract_failures",
+      "note": "Both SQuAD impossible questions received invented answers, and the ambiguous custom identity question received a guessed surname. None used the required abstention marker."
+    },
+    {
+      "case_ids": [
+        "pilot-squad-572a019f3f37b31900478645",
+        "pilot-squad-572f57c704bcaa1900d7686e"
+      ],
+      "type": "judge_review_candidates",
+      "note": "Correctness and groundedness scored 1.0, but relevancy scored 0.5. The relevancy pipeline split the answers into statements and rejected an altered system-function statement or a contextual alias. Review extraction fidelity and over-penalization of relevant context."
+    },
+    {
+      "case_ids": [
+        "pilot-squad-5711658e50c2381900b54ad6"
+      ],
+      "type": "judge_review_candidate",
+      "note": "British exactly matches the source reference and correctness scored 1.0, but groundedness scored 0.3. The judge distinguished British origin from inventor nationality. This interpretation needs human review against the source question and context."
+    },
+    {
+      "case_ids": [
+        "pilot-squad-5acf900177cf76001a685281"
+      ],
+      "type": "entity_grounding_review_candidate",
+      "note": "The context accredits the university, not its Press. The source marks the Press question unanswerable. The judge nevertheless gave groundedness 1.0 and its correctness explanation disputed the reference, despite returning score 0.0. Review this entity conflation and explanation inconsistency."
+    },
+    {
+      "case_ids": [
+        "pilot-custom-instruction-01"
+      ],
+      "type": "confirmed_exact_reference_grading_error",
+      "note": "The actual answer 09:00 exactly matches a supplied reference. Correctness was scored 0.0 because the judge's explanation invented a typo, 09:0:0. The saved grading prompt hash was verified against the exact actual answer and references. This is a judge misreading, not a response-formatting change in the pipeline."
+    }
+  ],
+  "interpretation": "The 2 automated passes and 8 flags are not model accuracy. They combine answer-model failures with judge disagreements. No genuine human-validation labels or agreement rate have been produced."
+}
