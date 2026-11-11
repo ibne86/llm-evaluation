@@ -1,6 +1,6 @@
 # Project progress
 
-Updated: 11 November 2026.
+Updated: 11 November 2026. Current status: ten-case manual review complete (30/30 verdicts, 25/30 local-judge matches); independent blinded validation and final evaluation remain outstanding. Earlier entries are historical checkpoints.
 
 ## Completed
 
@@ -21,12 +21,12 @@ Updated: 11 November 2026.
 
 ## Remaining work
 
-1. User review of the completed 10-case pilot and the separate answer-model/judge findings.
-2. Collect genuine human labels with a predefined rubric and investigate judge disagreements before trusting larger-run scores.
-3. After pilot review and calibration decisions, freeze settings and prepare the separate final 50-case set.
-4. Add response consistency tests and the remaining regression/reporting features.
-5. Compare human and judge decisions, report agreement with denominators and limitations, and finalize documentation.
-6. Review publication contents and publish only with explicit user approval.
+1. Inspect and commit the prepared pilot review examples and documentation, then push and merge manually.
+2. Record the pilot calibration decision before freezing final evaluation settings.
+3. Prepare the separate final 50-case set with pilot source IDs and contexts excluded, then run the final evaluation.
+4. Complete the remaining regression/reporting features and final analysis.
+5. Preserve the completed non-blinded manual review and its limitations; independent blinded validation remains a separate outstanding milestone.
+6. Review further publication contents and publish only with explicit user approval.
 
 ## Hardware constraints
 
@@ -34,8 +34,7 @@ The screenshots show 16 GB installed RAM (15.7 GB usable) with 1.9 GB available 
 
 ## Publication status
 
-Local setup only. No GitHub repository, remote, commit, or push was created during initialization. Python dependencies are installed inside .venv. The qwen2.5:1.5b answer model is downloaded into Ollama storage, and two synthetic setup responses are recorded locally. Synthetic setup metric results are recorded. The 10-case pilot is prepared and executed. The final evaluation dataset remains unprepared.
-
+The user published the baseline and merged the human-review tooling, offline CI and response-consistency feature into [the GitHub repository](https://github.com/ibne86/llm-evaluation). The current branch, `codex/pilot-review-findings`, prepares saved pilot review examples and documentation for inspection. Commits, pushes, merges and branch cleanup remain manual. Local working reviews and generated runs remain ignored; the final 50-case dataset has not been prepared.
 
 ## Step 2a: Ollama application
 
@@ -160,3 +159,20 @@ Both original models remain unchanged. The qwen3:4b judge passed two native sche
 - Verified the saved summary, all nine answer-prompt hashes, all 18 G-Eval prompt hashes and raw-score normalization. Identical opening-time grading prompts produced different raw scores; this is judge variability rather than changed answer text. No cause is established.
 - Prepared portable result/summary copies and separate assistant audit notes in `results/examples`. Preserved the original local experiment and original scores/reasons. Elapsed time: 459.903 seconds, including 11.703 seconds of generation requests and 446.937 seconds of metric evaluations.
 - Next checkpoint: review the findings, make focused code/results commits and open a pull request. Genuine human validation and the separate final 50-case evaluation remain pending.
+
+## Earlier AI review examples prepared for publication
+
+- The user created `codex/pilot-review-findings` from a clean, up-to-date `main` after merging the response-consistency feature.
+- Prepared four portable review/comparison examples and a findings guide. Ibne is the review owner; AI assessment authorship and declared prior exposure are explicit. Local working files and the genuine-human review worksheet are preserved.
+- Reviewed coverage: ten cases and 30 metric decisions. Matching AI/local-judge decisions: 25/30 (83.3%); relevancy 8/10, correctness 9/10, groundedness 8/10. Five disagreements include one interpretation-sensitive nationality inference.
+- Verified the original source fingerprint, full case evidence, all 30 paired decisions, per-metric counts, the five investigation records, the refreshed review fingerprint and documentation links. No inference, model/configuration change or source-score rewrite was performed. The last verified offline unit suite remains 85 passed; this documentation/example change does not modify executable code.
+- Next checkpoint: the user inspects and commits these changes, then pushes and merges manually. Genuine human validation and the final 50-case evaluation remain outstanding.
+
+## Completed manual pilot review aligned across code, reports and documentation
+
+- Ibne confirmed completing the manual check and recorded 30/30 human pass/fail verdicts. Human/local-judge agreement is 25/30 (83.3%); relevancy 8/10, correctness 9/10, groundedness 8/10. Human/earlier-assistant agreement is 30/30. Prior exposure was declared; written human reasons were not collected.
+- Added an explicit optional-reason collection policy while preserving the required-reason default and legacy packets. Supported human metadata is validated; completion is derived from verdicts. Source, rubric and case evidence checks remain enforced.
+- Added optional secondary AI-reference comparison, per-input content fingerprints, written-reason coverage, all paired decisions and portable evidence links. The earlier assistant assessment keeps its AI authorship.
+- Prepared publishable human worksheet and JSON/Markdown comparison examples, fixed the findings links and repaired the earlier AI comparison's Markdown tables. Local pre-alignment worksheet/report snapshots are archived under ignored results/reviews/archive.
+- Verification: 103 offline unit tests passed, including the real published review reproduction and new checks for metadata, optional reasons, fingerprints, AI-reference validation, denominators and CLI preservation. Report counts, source evidence, relative links and table rendering were checked without model inference.
+- The original model pair, settings, original pilot/consistency outputs and raw scores are unchanged. The separate consistency trials have no human ratings. Next: inspect changes, make focused commits and publish manually; then record the calibration decision before freezing final evaluation settings.

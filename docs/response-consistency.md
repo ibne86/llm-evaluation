@@ -79,7 +79,7 @@ Resume verifies the trial matrix, original case evidence, response hashes, saved
 
 Missing/errored generations cannot establish text stability, so the per-case stability value is `null` until all requested answers exist. Missing/errored evaluations make the all-repeats quality result `null`. The report retains error, incomplete and cleanup counts. Metric averages use completed evaluations and show their denominators.
 
-Temperature zero and the same seed test repeatability under fixed settings; they do not establish robustness to different prompts, seeds or sampling configurations. Warm requests may benefit from model/prompt caching, so timings do not measure independent cold starts. The small local judge remains fallible, and automated passes are not established model accuracy. Genuine human validation is still pending.
+Temperature zero and the same seed test repeatability under fixed settings; they do not establish robustness to different prompts, seeds or sampling configurations. Warm requests may benefit from model/prompt caching, so timings do not measure independent cold starts. The small local judge remains fallible, and automated passes are not established model accuracy. The [original ten-case pilot manual review](pilot-review-findings.md) is complete. These nine repeated-response trials have not received separate human ratings; independent blinded validation remains outstanding.
 
 The baseline pilot inputs, prompts, models and original results remain available separately. This feature adds a new experiment type rather than revising its saved measurements. The existing GitHub unit-test workflow automatically includes the new fake-client and reporting tests; actual Ollama runs stay local.
 
