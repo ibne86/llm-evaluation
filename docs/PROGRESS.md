@@ -1,6 +1,6 @@
 # Project progress
 
-Updated: 10 November 2026.
+Updated: 11 November 2026.
 
 ## Completed
 
@@ -132,3 +132,17 @@ Both original models remain unchanged. The qwen3:4b judge passed two native sche
 - Offline unit tests: 56 passed, including 24 synthetic/review workflow checks. Synthetic fixture labels are not human validation.
 - Both original models and all evaluation prompts/settings remain unchanged. No new inference is needed for this feature.
 - Next checkpoint: the user enters genuine human ratings, compares them with the original pilot and investigates disagreements. Final 50-case evaluation and consistency tests remain pending.
+
+## Human-review feature merged
+
+- PR #1 merged into `main`; the user updated local `main` to `fc652ae` and deleted the completed feature branch locally and on GitHub.
+- The assistant reviewed all ten pilot cases in separate, clearly attributed local files. These ratings do not complete human validation; genuine human labels remain pending.
+
+## Offline test CI configured — first GitHub execution pending
+
+- Added a GitHub Actions workflow on `codex/ci-tests` for pushes, pull requests and manual runs.
+- The job targets Windows Server 2025 and Python 3.12, installs the existing dependency snapshot and local package, checks dependency compatibility and runs the offline unit suite.
+- Added a JUnit XML artifact, dependency caching, a job timeout and cancellation of superseded runs. Official actions use verified commit SHA pins and read-only repository contents access.
+- Added a CI guide and a README entry explaining scope, results and local reproduction.
+- Local verification: a fresh Python 3.12.1 environment installed the locked dependencies and editable package, passed `pip check`, and passed all 56 unit tests with a JUnit report. Parsed the workflow YAML, verified action SHAs and input names against official action definitions, and checked the four run commands with PowerShell's parser. GitHub-hosted execution is still pending.
+- Next checkpoint: review the changes, commit and push the branch manually, then inspect the first GitHub execution before merging this feature. Human validation, the final 50-case evaluation and consistency tests remain pending.

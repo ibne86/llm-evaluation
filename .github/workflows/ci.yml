@@ -1,0 +1,65 @@
+name: Offline unit tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    name: Windows / Python 3.12
+    runs-on: windows-2025
+    timeout-minutes: 15
+
+    env:
+      DEEPEVAL_TELEMETRY_OPT_OUT: "1"
+      DEEPEVAL_DISABLE_DOTENV: "1"
+      PYTHONUTF8: "1"
+
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+          pip-version: "26.3"
+          cache: pip
+          cache-dependency-path: requirements-lock.txt
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r requirements-lock.txt
+
+      - name: Install the local package
+        run: python -m pip install --no-deps --no-build-isolation -e .
+
+      - name: Check dependency compatibility
+        run: python -m pip check
+
+      - name: Run offline unit tests
+        run: >-
+          python -m pytest tests/unit -m "not integration" -q
+          --junitxml="${{ runner.temp }}/unit-test-results.xml"
+
+      - name: Upload unit test results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: unit-test-results-windows-python312
+          path: ${{ runner.temp }}/unit-test-results.xml
+          if-no-files-found: warn
+          retention-days: 14
