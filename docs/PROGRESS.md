@@ -138,11 +138,25 @@ Both original models remain unchanged. The qwen3:4b judge passed two native sche
 - PR #1 merged into `main`; the user updated local `main` to `fc652ae` and deleted the completed feature branch locally and on GitHub.
 - The assistant reviewed all ten pilot cases in separate, clearly attributed local files. These ratings do not complete human validation; genuine human labels remain pending.
 
-## Offline test CI configured — first GitHub execution pending
+## Offline test CI verified and merged
 
 - Added a GitHub Actions workflow on `codex/ci-tests` for pushes, pull requests and manual runs.
 - The job targets Windows Server 2025 and Python 3.12, installs the existing dependency snapshot and local package, checks dependency compatibility and runs the offline unit suite.
 - Added a JUnit XML artifact, dependency caching, a job timeout and cancellation of superseded runs. Official actions use verified commit SHA pins and read-only repository contents access.
 - Added a CI guide and a README entry explaining scope, results and local reproduction.
-- Local verification: a fresh Python 3.12.1 environment installed the locked dependencies and editable package, passed `pip check`, and passed all 56 unit tests with a JUnit report. Parsed the workflow YAML, verified action SHAs and input names against official action definitions, and checked the four run commands with PowerShell's parser. GitHub-hosted execution is still pending.
-- Next checkpoint: review the changes, commit and push the branch manually, then inspect the first GitHub execution before merging this feature. Human validation, the final 50-case evaluation and consistency tests remain pending.
+- Local verification: a fresh Python 3.12.1 environment installed the locked dependencies and editable package, passed `pip check`, and passed all 56 unit tests with a JUnit report. Parsed the workflow YAML, verified action SHAs and input names against official action definitions, and checked the four run commands with PowerShell's parser.
+- The [first GitHub run](https://github.com/ibne86/llm-evaluation/actions/runs/42965274154) passed all 56 tests in 2.09 seconds on CPython 3.12.10. Dependency compatibility and JUnit artifact upload succeeded.
+- The user merged PR #2. At the user's explicit request, local `main` was fast-forwarded to `a1b23cc` and the completed CI branch was deleted locally and remotely. The user then requested manual Git instructions for future work.
+
+## Response consistency implemented and locally verified
+
+- The user created `codex/response-consistency` from the updated `main`.
+- Added a no-inference preview, bounded repeats, per-repeat generation/evaluation, separate text-stability and quality counts, and JSON/CSV/Markdown reports.
+- Default coverage: the first answerable, unanswerable and embedded-instruction pilot cases, three repeats each. Nine answer requests and 27 metric evaluations use the existing model pair, seed, prompts, thresholds and CPU settings.
+- Added checkpointed resume with case, response, configuration, model/software and source-signature validation. Completed logical trials are retained; failed or unfinished work can be retried.
+- Offline unit tests: 85 passed, including 29 new checks for stable wrong answers, acceptable wording variation, failed requests, model cleanup, report integrity, interrupted work and resume behavior. These use fake models and do not establish live-model consistency.
+- The user previewed the plan, then ran the actual local experiment: `consistency-20261111T061137670564Z`. All nine answers and 27 metrics completed, with zero execution/phase errors and both models unloaded.
+- All three cases repeated the exact same answer on every trial. Automated outcomes: five trial passes, four flags; only one case passed all repeats. The unanswerable county question consistently produced `15`, and the opening-time question consistently produced `09:00` while receiving changing correctness grades.
+- Verified the saved summary, all nine answer-prompt hashes, all 18 G-Eval prompt hashes and raw-score normalization. Identical opening-time grading prompts produced different raw scores; this is judge variability rather than changed answer text. No cause is established.
+- Prepared portable result/summary copies and separate assistant audit notes in `results/examples`. Preserved the original local experiment and original scores/reasons. Elapsed time: 459.903 seconds, including 11.703 seconds of generation requests and 446.937 seconds of metric evaluations.
+- Next checkpoint: review the findings, make focused code/results commits and open a pull request. Genuine human validation and the separate final 50-case evaluation remain pending.

@@ -4,7 +4,7 @@ A Python QA project that evaluates an existing local language model with pytest,
 
 ## Current status
 
-The first 10-case development pilot has completed generation and all 30 metric evaluations. Offline harness tests: **56 passed**. Pilot execution errors: **0**; phase errors: **0**. Human review tooling is implemented; genuine human labels are still pending. The final 50-case set has not been prepared.
+The first 10-case development pilot has completed generation and all 30 metric evaluations. Offline harness tests: **85 passed**. The first consistency run also completed all nine answers and 27 metric evaluations with zero execution errors. Human review and repeated-response tooling are implemented; genuine human labels are still pending. The final 50-case set has not been prepared.
 
 The original models remain unchanged:
 
@@ -89,6 +89,30 @@ Each run creates a folder under `results/runs` with `results.json`, `results.csv
 
 Exit code 0 means all quality checks passed, 1 means execution completed with quality failures, and 2 means an execution error or incomplete run. A model-quality failure is not hidden to make the report green.
 
+## Response consistency
+
+The [consistency runner](docs/response-consistency.md) repeats three selected pilot cases three times, saves each answer separately and evaluates every repeat. The report separates exact/normalized text stability from correctness, groundedness and relevancy outcomes. Repeating a wrong answer does not turn it into a quality pass.
+
+Preview the selected cases and settings without contacting Ollama:
+
+```powershell
+python scripts/run_consistency.py --plan
+```
+
+After reviewing the plan, run `python scripts/run_consistency.py`. The default experiment makes nine answer requests and 27 metric evaluations, with the models loaded sequentially. JSON, CSV and Markdown reports are saved in a new `results/runs/consistency-...` folder. Use `--resume RUN_FOLDER` for unchanged interrupted work or `--summary RUN_FOLDER` to read saved results. See the guide for selection options, exit codes and limitations.
+
+The first measured consistency run produced identical response text across all three repeats for every selected case:
+
+| Case | Exact text stable | Automated quality passes |
+| --- | --- | ---: |
+| Civil disobedience | Yes | 3/3 |
+| Unanswerable county count | Yes | 0/3 |
+| Embedded instruction / opening time | Yes | 2/3 |
+
+The county answer remained the unsupported `15`. The opening-time answer remained the exact reference `09:00`, while the judge's correctness scores changed from 0.0 to 1.0 and 1.0 for identical grading prompts. This demonstrates why text stability and judge-based quality outcomes must be reported separately. The five automated passes and four flags are not an accuracy estimate. Both models unloaded successfully; elapsed time was approximately 7 minutes 40 seconds.
+
+See the [recorded consistency summary](results/examples/consistency-summary.md), [full results](results/examples/consistency-results.json), and [assistant audit notes](results/examples/consistency-review-notes.json). The audit verified all nine answer-prompt hashes and all 18 G-Eval prompt hashes/raw score normalizations. Genuine human validation remains pending.
+
 ## Evaluation methods
 
 | Area | Method | Passing threshold |
@@ -136,6 +160,6 @@ Other limits include the small, short-context sample, model-family bias, small-m
 
 ## Remaining milestones
 
-Next: collect the pilot's human reviews and investigate disagreements, then freeze final evaluation settings, prepare the separate 50-case set, add response consistency tests and complete the final analysis. The pilot implementation is published on GitHub with five focused baseline commits. Further publication and pushing require explicit approval.
+Next: review the consistency findings, collect the pilot's genuine human reviews and investigate disagreements, then freeze final evaluation settings, prepare the separate 50-case set and complete the final analysis. The baseline, review tooling and offline CI workflow are published on GitHub. Further publication and pushing require explicit approval.
 
 Progress is tracked in [PROGRESS.md](docs/PROGRESS.md) and the [project plan](docs/PROJECT_PLAN.md). A software license has not yet been selected. Dataset material is CC BY-SA 4.0; model licenses are separate, and model files are not included in the repository.
