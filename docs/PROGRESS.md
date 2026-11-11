@@ -116,3 +116,19 @@ Both original models remain unchanged. The qwen3:4b judge passed two native sche
 - Reports: results/runs/pilot-20261110T062839549380Z; portable examples are in results/examples.
 - Generation request time: 21.907 seconds; metric request time: 584.551 seconds. These exclude some orchestration/cleanup overhead and do not estimate the final suite's runtime.
 - Stop at pilot review. No final 50-case set, model change, GitHub repository, push or publication was performed.
+
+## GitHub baseline published
+
+- The user manually created five focused commits for dependencies, local judge diagnostics, dataset/configuration, the evaluation pipeline and documentation/results.
+- The user created https://github.com/ibne86/llm-evaluation and pushed the five commits to `main`.
+- Baseline head: `76a88ea`; the user then created `codex/judge-validation` from a clean working tree.
+
+## Human review workflow implemented — real labels pending
+
+- Added a fixed human rubric and an offline review-packet command for all ten saved pilot cases; no judge scores or explanations are included in the packet.
+- Added validated human labels, declared prior exposure, source/evidence fingerprint checks, paired-decision agreement, per-metric counts and disagreement reports.
+- Missing and uncertain ratings do not count as pass/fail pairs; no labels means no agreement rate. Original outputs, scores and reviews are preserved.
+- Added a step-by-step human validation guide. Working reviews and comparisons in `results/reviews/` are ignored by Git.
+- Offline unit tests: 56 passed, including 24 synthetic/review workflow checks. Synthetic fixture labels are not human validation.
+- Both original models and all evaluation prompts/settings remain unchanged. No new inference is needed for this feature.
+- Next checkpoint: the user enters genuine human ratings, compares them with the original pilot and investigates disagreements. Final 50-case evaluation and consistency tests remain pending.
