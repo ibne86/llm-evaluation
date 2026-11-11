@@ -73,6 +73,12 @@ $env:DEEPEVAL_DISABLE_DOTENV = '1'
 .\.venv\Scripts\python.exe -m pytest -q
 ```
 
+## Continuous integration
+
+The [GitHub Actions workflow](.github/workflows/ci.yml) is configured to run the offline unit suite on every push and pull request, using Windows and Python 3.12. It installs the pinned dependencies, checks compatibility and uploads a JUnit test report, including after test failures. The suite uses fake model responses and saved fixtures. See the [CI guide](docs/ci.md) for logs, artifacts, local reproduction and workflow maintenance.
+
+## Run the local model evaluation
+
 Run the actual local pilot:
 
 ```powershell
