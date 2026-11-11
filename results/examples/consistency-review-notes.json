@@ -1,0 +1,59 @@
+{
+  "reviewer": "Codex (AI assistant)",
+  "review_type": "assistant_findings_about_recorded_outputs",
+  "human_labels_collected": false,
+  "source_run_id": "consistency-20261111T061137670564Z",
+  "original_local_results_sha256": "06f5233d0320773025ff997c6208281fe344ba416186d6ce4a00c7774dfac0a2",
+  "portable_verification": "Verify llm_eval.config.fingerprint(parsed consistency-results.json) against source_results_canonical_sha256, and recompute its summary with llm_eval.consistency.summarize_consistency. The raw local-file hash records the original experiment; Git checkout line-ending conversion can change a working-copy file hash.",
+  "verification": {
+    "saved_summary_recomputed_and_matched": true,
+    "answer_prompt_hashes_verified": 9,
+    "geval_prompt_hashes_and_raw_score_normalization_verified": 18,
+    "completed_generations": 9,
+    "completed_metric_evaluations": 27,
+    "case_execution_errors": 0,
+    "phase_errors": 0,
+    "both_models_unloaded": true,
+    "original_scores_and_responses_modified": false
+  },
+  "measured_time": {
+    "elapsed_seconds": 459.903,
+    "sum_generation_request_seconds": 11.703,
+    "sum_metric_evaluation_seconds": 446.937,
+    "note": "These measurements apply to this local development run. Warm requests can benefit from caching; they are not cold-start throughput estimates."
+  },
+  "findings": [
+    {
+      "case_id": "pilot-squad-5728d9403acd2414000e001b",
+      "type": "stable_response_and_metric_decisions",
+      "note": "All three answer responses are identical. All three metrics pass on each repeat, giving 3/3 automated quality passes."
+    },
+    {
+      "case_id": "pilot-squad-5ad01f0f77cf76001a686ac3",
+      "type": "stable_unsupported_answer_with_variable_relevancy_grading",
+      "actual_response": "15",
+      "automated_quality_passes": 0,
+      "answer_relevancy_scores_by_repeat": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "note": "The model repeats 15 instead of acknowledging insufficient context. The passage supplies a ranking cutoff, not the total number requested. Correctness, groundedness and the exact-abstention check fail on every repeat. Relevancy grades vary despite identical case inputs and responses; the statement-extraction and verdict-request prompt hashes match across repeats, while the final explanation prompt reflects different verdicts. The later relevancy explanations also mix relevancy with missing evidence."
+    },
+    {
+      "case_id": "pilot-custom-instruction-01",
+      "type": "identical_exact_reference_answer_receives_variable_correctness_grades",
+      "actual_response": "09:00",
+      "automated_quality_passes": 2,
+      "correctness_scores_by_repeat": [
+        0.0,
+        1.0,
+        1.0
+      ],
+      "correctness_request_prompt_sha256": "19ec567dfaf34b189733ea974340b12e3c3c7b689819565854266b0a36169417",
+      "note": "The actual response is exactly 09:00 on all three repeats and matches a reference and the supplied policy. The correctness prompt hash is identical on all three repeats. The first judge result invents the typo 09:0:0 and assigns zero; later results assign ten before DeepEval normalizes them to 1.0, but retain contradictory typo language in their reasons. Raw output scores and normalization were verified. This is observed judge-output variability for the same grading prompt, not changed answer text."
+    }
+  ],
+  "interpretation": "All three selected cases have exactly repeated answer text under the fixed baseline settings. Automated trial outcomes are 5 passes and 4 flags, with one case passing every repeat. These are not model-accuracy estimates: they combine genuine answer failures with judge grading problems. The small, already-inspected pilot subset, repeated observations, shared model-family bias and pending genuine human validation limit generalization. No cause of the judge variability has been established.",
+  "source_results_canonical_sha256": "8d7021f840ab692c209a435d17bab360e0790b3f2160a6bb5a4096314e526348"
+}
