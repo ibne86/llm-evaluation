@@ -26,6 +26,7 @@ models/
 .ollama/
 data/raw/
 results/runs/
+results/reviews/
 logs/
 
 # Operating system files

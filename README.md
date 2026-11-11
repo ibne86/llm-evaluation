@@ -4,7 +4,7 @@ A Python QA project that evaluates an existing local language model with pytest,
 
 ## Current status
 
-The first 10-case development pilot has completed generation and all 30 metric evaluations. Offline harness tests: **32 passed**. Pilot execution errors: **0**; phase errors: **0**. User review of the pilot is the next checkpoint; the final 50-case set has not been prepared.
+The first 10-case development pilot has completed generation and all 30 metric evaluations. Offline harness tests: **56 passed**. Pilot execution errors: **0**; phase errors: **0**. Human review tooling is implemented; genuine human labels are still pending. The final 50-case set has not been prepared.
 
 The original models remain unchanged:
 
@@ -114,7 +114,15 @@ See the [recorded pilot summary](results/examples/pilot-summary.md) and [full ex
 
 ## Human validation and limitations
 
-Genuine human labels have not yet been collected, so no agreement rate is reported. The planned stage uses a predefined rubric and independent review of 10–15 representative responses before revealing judge decisions. Agreement will be matching decisions divided by paired completed reviews, with disagreements investigated separately. A small sample and high agreement would not establish general accuracy.
+Genuine human labels have not yet been collected, so no agreement rate is reported. The [human validation guide](docs/human-validation.md) defines a rubric for all ten saved pilot responses. An offline command prepares a review file without judge scores or explanations; another compares your own ratings with the original judge decisions and writes JSON/Markdown reports. Missing and uncertain decisions are excluded from agreement, with coverage shown explicitly. Prior exposure to findings is recorded; omitting scores from a packet cannot undo previous exposure.
+
+```powershell
+.\.venv\Scripts\python.exe scripts/review_judge.py prepare --results results/examples/pilot-results.json --output results/reviews/pilot-human-review.json
+# Fill the review JSON yourself, then compare:
+.\.venv\Scripts\python.exe scripts/review_judge.py compare --results results/examples/pilot-results.json --review results/reviews/pilot-human-review.json --output-dir results/reviews/pilot-comparison-01
+```
+
+Agreement is matching human/judge metric decisions divided by paired pass/fail decisions, with disagreements investigated separately. Reports do not overwrite the original run or human labels. A small sample and high agreement would not establish general accuracy.
 
 A judge setup control already produced an internally contradictory explanation despite the expected score. The pilot also permits comparison between metric decisions and source references. Keep these outputs for review rather than treating valid JSON or a numerical score as proof of correctness.
 
@@ -122,6 +130,6 @@ Other limits include the small, short-context sample, model-family bias, small-m
 
 ## Remaining milestones
 
-After user review of this pilot: freeze final evaluation settings, prepare the separate 50-case set, add response consistency tests, collect human reviews, analyze disagreements, complete documentation and review GitHub publication contents. Publication and pushing require explicit approval.
+Next: collect the pilot's human reviews and investigate disagreements, then freeze final evaluation settings, prepare the separate 50-case set, add response consistency tests and complete the final analysis. The pilot implementation is published on GitHub with five focused baseline commits. Further publication and pushing require explicit approval.
 
-Progress is tracked in [PROGRESS.md](docs/PROGRESS.md) and the [project plan](docs/PROJECT_PLAN.md). The software license will be agreed before public release. Dataset material is CC BY-SA 4.0; model licenses are separate, and model files are not included in the repository.
+Progress is tracked in [PROGRESS.md](docs/PROGRESS.md) and the [project plan](docs/PROJECT_PLAN.md). A software license has not yet been selected. Dataset material is CC BY-SA 4.0; model licenses are separate, and model files are not included in the repository.
