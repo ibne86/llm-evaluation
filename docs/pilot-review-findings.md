@@ -51,8 +51,8 @@ The command makes no model calls. It validates the source, case evidence, rubric
 
 ## Calibration status and next checkpoint
 
-The manual ten-case review is complete. Independent blinded validation remains outstanding, and the nine separate consistency trials have not received their own human ratings. The small sample, related metrics, prior exposure and shared model-family bias limit interpretation. Human/judge agreement does not establish accuracy or independent confirmation.
+The manual ten-case review and the [nine-response consistency review](consistency-human-review.md) are complete, with written reasons for all judgments. The latter has 24/27 matching judge decisions and is reported separately because the questions overlap and observations are correlated. Independent blinded review remains an additional validation option. The small sample, related metrics, prior exposure and shared model-family bias limit interpretation. Human/judge agreement does not establish accuracy or independent confirmation.
 
-The answer model remains `qwen2.5:1.5b`, and the judge remains `qwen3:4b`. Prompts, thresholds, CPU settings and original model outputs are unchanged. Before preparing the separate final 50-case set, record whether the baseline judge is retained or a separately versioned pilot calibration is attempted. Exclude pilot source IDs and contexts, and freeze settings before inspecting final-set outcomes.
+The [judge decision and evaluation freeze](evaluation-freeze.md) retain `qwen2.5:1.5b` and `qwen3:4b`, with the same prompts, rubric versions, thresholds and CPU settings. No judge calibration or new inference was performed for that decision. Original outputs remain preserved. Prepare and validate the separate final 50-case set next, excluding pilot source IDs and contexts, and record its hash before inspecting model outcomes.
 
 See the [human review guide](human-validation.md) for reason policies and review metadata. SQuAD material retains its [dataset attribution](../data/DATASET_CARD.md) and [CC BY-SA 4.0 notice](../data/LICENSE-SQUAD.txt).

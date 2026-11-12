@@ -21,9 +21,9 @@ Updated: 12 November 2026. Current status: both manual reviews are complete. The
 
 ## Remaining work
 
-1. Inspect and publish the completed consistency human-review evidence and updated documentation using manual Git steps.
-2. Record the pilot calibration decision before freezing final evaluation settings.
-3. Prepare the separate final 50-case set with pilot source IDs and contexts excluded, then run the final evaluation.
+1. Review and publish the evaluation decision, protocol record and offline drift checker using manual Git steps.
+2. Prepare the separate final 50-case set with pilot source IDs and contexts excluded, validate it and record its hash before inference.
+3. Add final-runner support with protocol verification, actual local server/model digest checks and recorded freeze/dataset fingerprints; then run the final evaluation.
 4. Complete remaining real-model regression coverage, reporting and final analysis.
 5. Finish portfolio documentation and publication. Independent blinded review remains an additional validation option; the present manual review's prior exposure is disclosed.
 
@@ -33,7 +33,7 @@ The screenshots show 16 GB installed RAM (15.7 GB usable) with 1.9 GB available 
 
 ## Publication status
 
-The baseline, offline CI, response-consistency experiment, ten-case manual review and consistency human-review tooling are published in [the GitHub repository](https://github.com/ibne86/llm-evaluation); PR #5 was merged into main. The user created `codex/consistency-review-results` to publish the completed consistency review and its findings. Both sets of human judgments and reasons are complete. Commits, pushes, merges and branch cleanup remain manual. Original working reviews and runs remain ignored; the separate final 50-case dataset has not been prepared.
+The baseline, offline CI, response-consistency experiment and both completed human reviews are published in [the GitHub repository](https://github.com/ibne86/llm-evaluation). The user merged the consistency review, updated local main to `2166ec1`, deleted the completed branch locally/remotely and confirmed a clean working tree. The user then created `codex/evaluation-freeze`; its new decision record, offline checker and documentation are local preparation for the next publication. Commits, pushes, merges and branch cleanup remain manual. Original working reviews and runs remain ignored; the separate final 50-case dataset has not been prepared.
 
 ## Step 2a: Ollama application
 
@@ -207,3 +207,11 @@ Both original models remain unchanged. The qwen3:4b judge passed two native sche
 - The human review passes all three criteria on six trials and flags three county-answer trials, while the original automated run records five passes and four flags. Completion, agreement and quality outcomes remain distinct. The ten-case pilot's 25/30 agreement is reported separately; overlapping and repeated observations are not pooled into an accuracy estimate.
 - Prepared publishable worksheet and JSON/Markdown comparison copies, rebased evidence links and updated current documentation. Verified source/worksheet fingerprints, all paired decisions, written-reason coverage, original local files, relative links and table rendering. Reproduced the report offline; no model inference or executable-code changes were needed. The last offline suite result remains 127 passed.
 - The user created codex/consistency-review-results from clean main. Next: inspect and publish this focused update manually, then record the judge-calibration decision and freeze settings before preparing the separate final 50-case set. Both reviews remain non-blinded; independent blinded review would provide additional validation.
+
+## Judge decision and evaluation protocol freeze — 12 November 2026
+
+- Retained the original answer/judge models, prompts, rubric versions, CPU options and thresholds. No calibration, inference, threshold tuning or review/result editing was performed. The decision records the observed relevance/correctness conflation, unsupported grading explanations and variability without claiming judge accuracy.
+- Added `evaluation-freeze.json` with all protocol configuration except the dataset selector, original model digests/server version, Python minor version, all 70 dependency pins, five normalized text-file hashes and seven canonical evidence fingerprints.
+- Added an offline command that checks configuration, source/dependency drift, preserved evidence and installed package versions. It reports mismatches with a nonzero status; Windows checkout line endings and JSON layout do not invalidate unchanged content. It never updates the record automatically.
+- The checker does not contact Ollama, validate current model weights, freeze unprepared data or change the existing pilot/consistency runners. Final-dataset preparation and final-runner integration, including actual server/digest validation and recorded freeze/dataset fingerprints, remain next.
+- Validation: 147 offline tests passed (the original 127 plus 20 new freeze checks), including configuration drift, changed scoring code, human-reason edits, dependency/runtime mismatches, CLI errors and Windows/JSON portability. The command, links and file-preservation checks are also verified. Original source files, configuration, model outputs and user review words remain unchanged. Git operations remain manual.

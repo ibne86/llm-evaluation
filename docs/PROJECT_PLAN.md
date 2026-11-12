@@ -1,6 +1,6 @@
 # Local LLM Evaluation — project plan and progress
 
-Prepared: 10 November 2026. Updated: 12 November 2026. Current status: the ten-case pilot, repeated-response experiment and manual pilot review are complete. Ibne supplied 30/30 verdicts, with 25/30 matching the original local judge. The manual review was non-blinded; a separate follow-up now includes all 30 written human rationales while preserving the initial version without reasons. Independent blinded validation and the final 50-case evaluation remain outstanding. The original model pair is unchanged. The consistency review is also complete: nine responses, 27 judgments with written reasons, and 24/27 local-judge matches (88.9%). Its result is separate from the overlapping ten-case pilot review. Earlier setup/checkpoint sections below are historical records.
+Prepared: 10 November 2026. Updated: 12 November 2026. Current status: both manual reviews are complete and published: 30 pilot judgments/reasons with 25/30 judge matches, and 27 consistency judgments/reasons with 24/27 matches. Both were non-blinded; the overlapping observations are reported separately. The original baseline is retained and recorded in an evaluation protocol freeze with an offline drift check. The final 50-case dataset and final-runner integration are next. Independent blinded review is an additional validation option. Earlier setup/checkpoint sections below are historical records.
 
 ## Objective and boundaries
 
@@ -95,7 +95,7 @@ Before the pilot, check valid structured outputs and score/reason fields using k
 | Context contradictions | DeepEval HallucinationMetric as a supplementary check; confirm the installed version's score direction and behavior with known examples |
 | Unanswerable handling | A clear requested abstention phrase with a deterministic contract assertion, plus rubric checks for invented claims or contradictory answers |
 | Consistency | Repeat a representative subset, reporting correctness/grounding pass rate across runs and semantic disagreement; identical wording alone is insufficient |
-| Human validation | Blind human review of 10–15 representative responses using the frozen rubric, then compare decisions with judge decisions |
+| Human validation | Human review of 10–15 saved responses using the frozen rubric; declare prior exposure, then compare with judge decisions |
 
 The hallucination metric's current documentation describes context consistency/contradiction; lack of contradiction alone does not establish that every added claim is supported. The explicit groundedness rubric addresses that difference. Retrieval precision/recall and similar retrieval-specific metrics are outside scope.
 
@@ -161,7 +161,7 @@ This is the intended final structure; create files only when their implementatio
 
 ### Milestone 2 — completion, 9–16 additional hours
 
-7. Freeze configuration/rubrics and prepare the separate 50-case final dataset with the required composition and custom behaviors. **1.5–2.5 hours.** Pending.
+7. Freeze configuration/rubrics and prepare the separate 50-case final dataset with the required composition and custom behaviors. **1.5–2.5 hours.** Protocol freeze and offline drift check implemented; separate dataset preparation, hash recording and final-runner checks remain pending. See [evaluation-freeze.md](evaluation-freeze.md).
 8. Add remaining metrics, consistency runs and automated regression checks. Consistency execution, human-review tooling and all 27 consistency judgments/reasons are complete. Remaining real-model regression coverage is pending.
 9. Prepare the human review sheet and analyze agreement/disagreements. Completed for all ten pilot cases: 30 non-blinded human verdicts, 25/30 local-judge matches, and 30 written human rationales in a follow-up version. The initial version without reasons is preserved. Independent blinded review remains outstanding.
 10. Complete reporting, failure analysis and reproducible example artifacts. **1.5–2.5 hours.** Pending.
@@ -190,9 +190,9 @@ Milestone 2 subtotal: **8.5–16 hours**, rounded planning allowance **9–16 ho
 
 ## Next checkpoint
 
-Inspect and publish the [completed consistency review](consistency-human-review.md) and its three evidence files. Both manual reviews now include written reasons: ten pilot answers with 25/30 judge matches, and nine consistency responses with 24/27 matches. Keep the rates separate because the questions overlap and the repeated measurements are correlated. Original model outputs, scores and local reviews are preserved.
+The completed consistency review is merged into main at `2166ec1`. Inspect and publish the [judge decision and protocol freeze](evaluation-freeze.md) and offline checker. Both human reviews, original model outputs and all recorded scores remain unchanged; prior exposure remains disclosed.
 
-Next, record the judge-calibration decision and freeze settings before preparing the separate final 50-case set. Exclude pilot source IDs and contexts from that set. Prior exposure remains disclosed; independent blinded review would provide additional validation. Git operations remain manual.
+Next, prepare the separate final 50-case set, excluding pilot source IDs and contexts. Validate and record its hash before model inference, then add final-runner support that checks the protocol and actual model/server identities and records the freeze fingerprint. Do not tune settings after seeing final outcomes. Independent blinded review would provide additional validation. Git operations remain manual.
 
 ## First measured answer-model baseline
 
