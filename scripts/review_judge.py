@@ -2,7 +2,9 @@
 
 import argparse
 import json
+import os
 from pathlib import Path
+from urllib.parse import quote
 
 from llm_eval.human_review import compare_review, comparison_markdown, create_review
 
@@ -25,6 +27,8 @@ def main(argv=None):
     prepare = commands.add_parser("prepare", help="Create a review without judge scores or reasons.")
     prepare.add_argument("--results", required=True, help="Saved results.json file.")
     prepare.add_argument("--output", required=True, help="New review JSON file.")
+    prepare.add_argument("--reason-policy", choices=("required", "optional"), default="required",
+                         help="Use optional when written explanations will not be collected.")
     compare = commands.add_parser("compare", help="Compare human labels; no model inference.")
     compare.add_argument("--results", required=True, help="The same saved results.json file.")
     compare.add_argument("--review", required=True, help="Human-completed review JSON.")
@@ -33,7 +37,7 @@ def main(argv=None):
     try:
         state = _read_json(args.results)
         if args.command == "prepare":
-            packet = create_review(state)
+            packet = create_review(state, reason_policy=args.reason_policy)
             _new_file(args.output, json.dumps(packet, ensure_ascii=False, indent=2) + "\n")
             print(f"Prepared {len(packet['reviews'])} cases with no human labels: {args.output}")
         else:
@@ -42,6 +46,15 @@ def main(argv=None):
             paths = (folder / "comparison.json", folder / "comparison.md")
             if any(path.exists() for path in paths):
                 raise ValueError("Comparison already exists. Choose a new output directory to keep previous evidence.")
+            evidence = {"source_results": args.results, "human_review": args.review}
+            report["evidence_files"] = {}
+            for key, path in evidence.items():
+                target = Path(path).resolve()
+                try:
+                    relative = Path(os.path.relpath(target, folder.resolve())).as_posix()
+                    report["evidence_files"][key] = quote(relative, safe="/:._-~")
+                except ValueError:
+                    report["evidence_files"][key] = target.as_uri()
             _new_file(paths[0], json.dumps(report, ensure_ascii=False, indent=2) + "\n")
             _new_file(paths[1], comparison_markdown(report))
             print(f"Review {report['status']}: {report['paired_decisions']}/{report['possible_pairs']} "

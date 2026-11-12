@@ -1,6 +1,6 @@
 # Local LLM Evaluation — project plan and progress
 
-Prepared: 10 November 2026. Current status: Milestone 1 execution complete; user pilot review pending. The original model pair is unchanged. Human validation, consistency testing and the final 50-case evaluation remain pending.
+Prepared: 10 November 2026. Updated: 12 November 2026. Current status: the ten-case pilot, repeated-response experiment and manual pilot review are complete. Ibne supplied 30/30 verdicts, with 25/30 matching the original local judge. The manual review was non-blinded; a separate follow-up now includes all 30 written human rationales while preserving the initial version without reasons. Independent blinded validation and the final 50-case evaluation remain outstanding. The original model pair is unchanged; earlier setup/checkpoint sections below are historical records.
 
 ## Objective and boundaries
 
@@ -50,7 +50,7 @@ Versioned dataset JSON
   -> DeepEval metrics -> local Ollama judge
   -> deterministic checks + metric scores/reasons + evaluator errors
   -> JSON/CSV results and Markdown report
-  -> human review CSV -> agreement/disagreement report
+  -> human review JSON -> agreement/disagreement report
 ```
 
 Generate all answers before loading the judge. Process one request at a time, including metric calls; explicitly disable metric concurrency. Unload models between phases using Ollama's supported lifecycle controls. Save responses so that judging can resume without repeating generation.
@@ -163,7 +163,7 @@ This is the intended final structure; create files only when their implementatio
 
 7. Freeze configuration/rubrics and prepare the separate 50-case final dataset with the required composition and custom behaviors. **1.5–2.5 hours.** Pending.
 8. Add remaining metrics, consistency runs and automated regression checks. **2–3.5 hours.** Pending.
-9. Prepare the human review sheet, obtain 10–15 real human reviews and analyze agreement/disagreements. **1.5–3 hours.** Pending; depends on user reviews.
+9. Prepare the human review sheet and analyze agreement/disagreements. Completed for all ten pilot cases: 30 non-blinded human verdicts, 25/30 local-judge matches, and 30 written human rationales in a follow-up version. The initial version without reasons is preserved. Independent blinded review remains outstanding.
 10. Complete reporting, failure analysis and reproducible example artifacts. **1.5–2.5 hours.** Pending.
 11. Finish README, setup/reproduction instructions, dataset documentation and limitations. **1.5–3 hours.** Pending.
 12. Review the exact publication contents with the user; publish to GitHub only when approved. **0.5–1.5 hours.** Pending.
@@ -190,14 +190,9 @@ Milestone 2 subtotal: **8.5–16 hours**, rounded planning allowance **9–16 ho
 
 ## Next checkpoint
 
-The 10-case pilot executed all 30 metrics without execution errors. Automated outcomes were 2 passes and 8 flags, including answer-model abstention failures and judge misgrading/review candidates. Read results/examples/pilot-summary.md and its review notes, then collect genuine human labels to assess judge decisions. The original models and original baseline scores are unchanged. The final 50-case set remains gated on user review; no GitHub publication is authorized.
+Inspect the [manual pilot findings](pilot-review-findings.md), compatible comparison command and publishable human worksheet/report. Human/local-judge agreement is 25/30 (83.3%), with five disagreements. The follow-up manual review is complete, with 30/30 written reasons and prior exposure explicitly recorded. The initial version without reasons is preserved. Independent blinded validation remains outstanding.
 
-
-
-
-
-
-
+After the manual Git publication steps, record the pilot calibration decision and freeze settings before preparing the separate final 50-case set. Preserve the original model outputs/scores and exclude pilot source IDs and contexts. Git operations remain manual.
 
 ## First measured answer-model baseline
 

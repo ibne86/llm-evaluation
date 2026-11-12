@@ -4,7 +4,7 @@ A Python QA project that evaluates an existing local language model with pytest,
 
 ## Current status
 
-The first 10-case development pilot has completed generation and all 30 metric evaluations. Offline harness tests: **85 passed**. The first consistency run also completed all nine answers and 27 metric evaluations with zero execution errors. Human review and repeated-response tooling are implemented; genuine human labels are still pending. The final 50-case set has not been prepared.
+The ten-case development pilot, all 30 metric evaluations and the first nine-trial consistency experiment are complete. Offline harness tests: **96 passed**. Ibne completed a manual pilot review with **30/30 verdicts**: **25/30 match the local judge (83.3%)**. Ibne has now supplied written reasons for all 30 decisions in a separate follow-up copy. Prior AI findings were visible, so the review remains non-blinded. Independent blinded validation and the separate final 50-case evaluation remain outstanding.
 
 The original models remain unchanged:
 
@@ -111,7 +111,7 @@ The first measured consistency run produced identical response text across all t
 
 The county answer remained the unsupported `15`. The opening-time answer remained the exact reference `09:00`, while the judge's correctness scores changed from 0.0 to 1.0 and 1.0 for identical grading prompts. This demonstrates why text stability and judge-based quality outcomes must be reported separately. The five automated passes and four flags are not an accuracy estimate. Both models unloaded successfully; elapsed time was approximately 7 minutes 40 seconds.
 
-See the [recorded consistency summary](results/examples/consistency-summary.md), [full results](results/examples/consistency-results.json), and [assistant audit notes](results/examples/consistency-review-notes.json). The audit verified all nine answer-prompt hashes and all 18 G-Eval prompt hashes/raw score normalizations. Genuine human validation remains pending.
+See the [recorded consistency summary](results/examples/consistency-summary.md), [full results](results/examples/consistency-results.json), and [assistant audit notes](results/examples/consistency-review-notes.json). The audit verified all nine answer-prompt hashes and all 18 G-Eval prompt hashes/raw score normalizations. These nine consistency trials have not received separate human ratings; the completed manual review below covers the original ten-case pilot.
 
 ## Evaluation methods
 
@@ -126,7 +126,7 @@ The evaluator explicitly uses the local judge. A small extension of DeepEval's n
 
 ## First measured pilot
 
-This is a machine-judged development run with human review pending:
+These are the original machine-judged pilot outcomes. The separate manual review below preserves these scores:
 
 | Total cases | Automated passes | Flagged cases | Case execution errors | Phase errors |
 | ---: | ---: | ---: | ---: | ---: |
@@ -142,24 +142,30 @@ SQuAD unanswerable exact-abstention checks: **0/2**. These counts and scores are
 
 See the [recorded pilot summary](results/examples/pilot-summary.md) and [full example JSON](results/examples/pilot-results.json). Full local runs remain in ignored `results/runs` folders.
 
+## Pilot review findings
+
+Ibne manually reviewed all ten saved pilot answers, supplying **30 pass/fail decisions**. Human/local-judge agreement is **25/30 (83.3%)**: 8/10 for relevancy, 9/10 for correctness and 8/10 for groundedness. Five disagreements were investigated.
+
+Prior judge outputs and AI findings were visible, so this review was non-blinded. The current follow-up review contains 30/30 written human reasons. The initial version without reasons is retained as a historical snapshot. Prior exposure remains a limitation, and agreement is not an accuracy estimate.
+
+Read the [findings guide](docs/pilot-review-findings.md), [human comparison with reasons](results/examples/pilot-human-comparison-with-reasons.md), [comparison JSON](results/examples/pilot-human-comparison-with-reasons.json), and [human worksheet with reasons](results/examples/pilot-human-review-with-reasons.json). The [initial human comparison without reasons](results/examples/pilot-human-comparison.md) remains available separately.
+
 ## Human validation and limitations
 
-Genuine human labels have not yet been collected, so no agreement rate is reported. The [human validation guide](docs/human-validation.md) defines a rubric for all ten saved pilot responses. An offline command prepares a review file without judge scores or explanations; another compares your own ratings with the original judge decisions and writes JSON/Markdown reports. Missing and uncertain decisions are excluded from agreement, with coverage shown explicitly. Prior exposure to findings is recorded; omitting scores from a packet cannot undo previous exposure.
+The ten-case manual review is complete. Independent blinded validation remains outstanding. The [human review guide](docs/human-validation.md) documents both required and optional written-reason policies. The follow-up worksheet retains the optional-reason collection policy and now contains 30 rated decisions with 30 human-written rationales. The original version without reasons is preserved. Reviewer metadata and actual prior exposure are preserved.
+
+Reproduce the published comparison offline into a fresh directory:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts/review_judge.py prepare --results results/examples/pilot-results.json --output results/reviews/pilot-human-review.json
-# Fill the review JSON yourself, then compare:
-.\.venv\Scripts\python.exe scripts/review_judge.py compare --results results/examples/pilot-results.json --review results/reviews/pilot-human-review.json --output-dir results/reviews/pilot-comparison-01
+python scripts/review_judge.py compare --results results/examples/pilot-results.json --review results/examples/pilot-human-review-with-reasons.json --output-dir results/reviews/pilot-human-with-reasons-reproduction-01
 ```
 
-Agreement is matching human/judge metric decisions divided by paired pass/fail decisions, with disagreements investigated separately. Reports do not overwrite the original run or human labels. A small sample and high agreement would not establish general accuracy.
+The command validates the evidence, recomputes human/judge agreement and records fingerprints for the source results and human worksheet. Missing/uncertain ratings are excluded from agreement, with coverage shown. Existing inputs and reports are preserved; no model inference is needed.
 
-A judge setup control already produced an internally contradictory explanation despite the expected score. The pilot also permits comparison between metric decisions and source references. Keep these outputs for review rather than treating valid JSON or a numerical score as proof of correctness.
-
-Other limits include the small, short-context sample, model-family bias, small-model reasoning limits, prompt sensitivity, possible scoring variability and CPU runtime. Correct abstention, factual correctness and groundedness are separate questions. A grounded refusal can still be wrong on an answerable case.
+Original run snapshots retain their earlier review status. Limitations include prior exposure to AI findings, one reviewer's subjectivity, the small sample, related metrics, shared model-family bias and judge variability. Correct abstention, factual correctness and groundedness remain separate criteria. Neither agreement nor successful integration establishes general model or judge accuracy.
 
 ## Remaining milestones
 
-Next: review the consistency findings, collect the pilot's genuine human reviews and investigate disagreements, then freeze final evaluation settings, prepare the separate 50-case set and complete the final analysis. The baseline, review tooling and offline CI workflow are published on GitHub. Further publication and pushing require explicit approval.
+Next: record the pilot calibration decision, freeze final evaluation settings, prepare the separate 50-case set and complete the final analysis. The completed non-blinded manual review is documented above; independent blinded validation remains outstanding. Human comparison examples and code are prepared on this branch for inspection. Git commits, pushes, merges and branch cleanup remain manual.
 
 Progress is tracked in [PROGRESS.md](docs/PROGRESS.md) and the [project plan](docs/PROJECT_PLAN.md). A software license has not yet been selected. Dataset material is CC BY-SA 4.0; model licenses are separate, and model files are not included in the repository.

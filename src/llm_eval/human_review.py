@@ -1,4 +1,4 @@
-"""Collect independent human decisions and compare them with a saved judge run."""
+"""Compare recorded human decisions with saved local judge evidence."""
 
 import copy
 import hashlib
@@ -27,6 +27,7 @@ RUBRIC = {
 }
 VERDICTS = (None, "pass", "fail", "uncertain")
 EXPOSURES = (None, "none", "scores_or_findings_seen")
+REASON_POLICIES = ("required", "optional")
 
 
 def _fingerprint(value):
@@ -79,8 +80,10 @@ def _source_rows(state):
     return rows
 
 
-def create_review(state):
+def create_review(state, *, reason_policy="required"):
     """Return an unlabelled review packet without judge decisions or explanations."""
+    if reason_policy not in REASON_POLICIES:
+        raise ValueError("reason_policy must be required or optional.")
     rows = _source_rows(state)
     reviews = []
     for row in rows:
@@ -92,7 +95,7 @@ def create_review(state):
             "actual_response": row["generation"]["actual_response"],
             "decisions": {name: {"verdict": None, "reason": ""} for name in METRICS},
         })
-    return {
+    packet = {
         "schema_version": 1,
         "rubric_version": RUBRIC_VERSION,
         "source_run_id": state["run_id"],
@@ -107,22 +110,56 @@ def create_review(state):
         "rubric": copy.deepcopy(RUBRIC),
         "reviews": reviews,
     }
+    if reason_policy == "optional":
+        packet["reason_policy"] = "optional"
+        packet["instructions"] = (
+            "Enter your own human decisions and declare actual prior exposure. "
+            "Use pass, fail or uncertain; null means not reviewed. Written reasons are optional; "
+            "leave reason empty when no explanation was collected. Do not invent explanations. "
+            "Set prior_exposure to none or scores_or_findings_seen. Do not edit evidence or rubric."
+        )
+    return packet
 
 
 def _validate_review(state, packet):
-    expected = create_review(state)
-    if not isinstance(packet, dict) or packet.keys() != expected.keys():
+    if not isinstance(packet, dict):
+        raise ValueError("Review packet fields do not match the schema.")
+    policy = packet.get("reason_policy", "required")
+    expected = create_review(state, reason_policy=policy)
+    allowed = expected.keys() | {"reviewer_type", "review_status", "reason_policy"}
+    if not expected.keys() <= packet.keys() or packet.keys() - allowed:
         raise ValueError("Review packet fields do not match the schema.")
     editable = {"reviewer", "prior_exposure", "reviews"}
     if any(packet[key] != value for key, value in expected.items() if key not in editable):
         raise ValueError("Review source, schema or rubric changed; use its original saved run.")
     if not isinstance(packet["reviewer"], str) or packet["prior_exposure"] not in EXPOSURES:
         raise ValueError("Invalid reviewer or prior_exposure; use none or scores_or_findings_seen.")
-    if not isinstance(packet["reviews"], list) or len(packet["reviews"]) != len(expected["reviews"]):
+    if packet.get("reviewer_type", "human") != "human":
+        raise ValueError("Human review reviewer_type must be human.")
+    by_id, has_decisions = _validate_rows(
+        state, packet["reviews"], require_reasons=policy == "required"
+    )
+    if has_decisions and (not packet["reviewer"].strip() or packet["prior_exposure"] is None):
+        raise ValueError("Set reviewer and prior_exposure before submitting human decisions.")
+    if "review_status" in packet and packet["review_status"] != _review_status(by_id):
+        raise ValueError("Declared review_status differs from the recorded decisions.")
+    return by_id
+
+
+def _review_status(reviews):
+    verdicts = [decision["verdict"] for row in reviews.values() for decision in row["decisions"].values()]
+    if all(verdict is None for verdict in verdicts):
+        return "not_started"
+    return "complete" if all(verdict in ("pass", "fail") for verdict in verdicts) else "partial"
+
+
+def _validate_rows(state, rows, *, require_reasons):
+    expected_rows = create_review(state)["reviews"]
+    if not isinstance(rows, list) or len(rows) != len(expected_rows):
         raise ValueError("Review must retain every selected case exactly once.")
-    expected_by_id = {row["case_id"]: row for row in expected["reviews"]}
+    expected_by_id = {row["case_id"]: row for row in expected_rows}
     by_id, has_decisions = {}, False
-    for row in packet["reviews"]:
+    for row in rows:
         if not isinstance(row, dict) or not isinstance(row.get("case_id"), str):
             raise ValueError("Review rows must contain a case ID.")
         case_id = row["case_id"]
@@ -141,12 +178,10 @@ def _validate_review(state, packet):
                 raise ValueError(f"Invalid human decision: {case_id}. Use pass, fail, uncertain or null.")
             if decision["verdict"] is not None:
                 has_decisions = True
-                if not decision["reason"].strip():
+                if require_reasons and not decision["reason"].strip():
                     raise ValueError(f"Every human decision needs a reason: {case_id}.")
         by_id[case_id] = row
-    if has_decisions and (not packet["reviewer"].strip() or packet["prior_exposure"] is None):
-        raise ValueError("Set reviewer and prior_exposure before submitting human decisions.")
-    return by_id
+    return by_id, has_decisions
 
 
 def compare_review(state, packet):
@@ -171,6 +206,10 @@ def compare_review(state, packet):
             else:
                 disagreements.append({
                     "case_id": case_id, "metric": name,
+                    **{key: copy.deepcopy(row["case"][key]) for key in (
+                        "question", "context", "expected_answers"
+                    )},
+                    "actual_response": row["generation"]["actual_response"],
                     "human_verdict": verdict, "human_reason": human["reason"],
                     "judge_verdict": judge_verdict, "judge_score": judge["score"],
                     "judge_threshold": judge["threshold"], "judge_reason": judge.get("reason", ""),
@@ -186,9 +225,36 @@ def compare_review(state, packet):
     unreviewed = sum(value["unreviewed"] for value in totals.values())
     complete_cases = sum(all(decision["verdict"] in ("pass", "fail") for decision in row["decisions"].values())
                          for row in reviews.values())
-    return {
+    rated = [decision for row in reviews.values() for decision in row["decisions"].values()
+             if decision["verdict"] is not None]
+    written_reasons = sum(bool(decision["reason"].strip()) for decision in rated)
+    comparisons = []
+    for number, row in enumerate(state["results"], 1):
+        case_id = row["case"]["case_id"]
+        for name in METRICS:
+            human = reviews[case_id]["decisions"][name]
+            judge = row["metrics"][name]
+            judge_verdict = "pass" if judge["passed"] else "fail"
+            comparison = {
+                "case_number": number, "case_id": case_id, "question": row["case"]["question"],
+                "metric": name, "human_verdict": human["verdict"], "human_reason": human["reason"],
+                "judge_verdict": judge_verdict, "judge_score": judge["score"],
+                "judge_threshold": judge["threshold"], "judge_reason": judge.get("reason", ""),
+                "human_matches_judge": (
+                    human["verdict"] == judge_verdict if human["verdict"] in ("pass", "fail") else None
+                ),
+            }
+            comparisons.append(comparison)
+    report = {
+        "schema_version": 1, "evaluation_type": "human_vs_local_judge",
         "rubric_version": RUBRIC_VERSION, "source_run_id": state["run_id"],
         "source_sha256": packet["source_sha256"], "reviewer": packet["reviewer"],
+        "human_review_sha256": _fingerprint(packet), "reviewer_type": "human",
+        "reason_policy": packet.get("reason_policy", "required"),
+        "reason_coverage": {
+            "rated_decisions": len(rated), "written_reasons": written_reasons,
+            "missing_written_reasons": len(rated) - written_reasons,
+        },
         "prior_exposure": packet["prior_exposure"],
         "status": "not_started" if paired + uncertain == 0 else (
             "complete" if unreviewed + uncertain == 0 else "partial"
@@ -197,7 +263,7 @@ def compare_review(state, packet):
         "possible_pairs": len(reviews) * len(METRICS), "paired_decisions": paired,
         "agreements": agreements, "agreement_rate": agreements / paired if paired else None,
         "unreviewed_decisions": unreviewed, "uncertain_decisions": uncertain,
-        "metrics": totals, "disagreements": disagreements,
+        "metrics": totals, "comparisons": comparisons, "disagreements": disagreements,
         "interpretation": (
             "Agreement is matching human/judge metric decisions divided by explicit paired decisions, "
             "not model accuracy or proof of judge validity. Unreviewed/uncertain labels are excluded "
@@ -206,6 +272,7 @@ def compare_review(state, packet):
             "record disagreement investigations separately."
         ),
     }
+    return report
 
 
 def comparison_markdown(report):
@@ -213,7 +280,7 @@ def comparison_markdown(report):
         return "not available" if value is None else f"{value:.1%}"
 
     lines = [
-        "# Human versus judge review", "",
+        "# Human versus local LLM judge review", "",
         f"- Source run: `{report['source_run_id']}`.",
         f"- Reviewer: {report['reviewer'] or 'not provided'}.",
         f"- Status: {report['status']}; fully reviewed cases: {report['fully_reviewed_cases']}/{report['selected_cases']}.",
@@ -222,21 +289,49 @@ def comparison_markdown(report):
         f"agreement: {report['agreements']}/{report['paired_decisions']} "
         f"({percentage(report['agreement_rate'])}).",
         f"- Unreviewed: {report['unreviewed_decisions']}; uncertain: {report['uncertain_decisions']}.",
+        f"- Written reasons: {report['reason_coverage']['written_reasons']}/"
+        f"{report['reason_coverage']['rated_decisions']}; reason policy: {report['reason_policy']}.",
         "", "| Metric | Paired | Agreements | Agreement rate | Unreviewed | Uncertain |",
         "| --- | ---: | ---: | ---: | ---: | ---: |",
     ]
     for name, metric in report["metrics"].items():
         lines.append(f"| {name} | {metric['paired']} | {metric['agreements']} | "
                      f"{percentage(metric['agreement_rate'])} | {metric['unreviewed']} | {metric['uncertain']} |")
+    lines.extend(["", "## Individual decisions", ""])
+    lines.extend(["| Case | Metric | Human | Local judge |",
+                  "| ---: | --- | --- | --- |"])
+    for row in report["comparisons"]:
+        cells = [str(row["case_number"]), row["metric"], row["human_verdict"] or "not reviewed",
+                 row["judge_verdict"]]
+        lines.append("| " + " | ".join(cells) + " |")
     lines.extend(["", "## Disagreements", ""])
     if not report["disagreements"]:
         lines.append("No disagreements among paired decisions. Unreviewed decisions are not agreements.")
     for disagreement in report["disagreements"]:
         lines.extend([
             f"### {disagreement['case_id']} / {disagreement['metric']}", "",
-            f"Human: **{disagreement['human_verdict']}**. {disagreement['human_reason']}", "",
+            f"Question: {disagreement['question']}", "",
+            f"Actual response: {disagreement['actual_response']}", "",
+            f"Human: **{disagreement['human_verdict']}**. "
+            f"{disagreement['human_reason'] or 'No written rationale supplied.'}", "",
             f"Judge: **{disagreement['judge_verdict']}**, score {disagreement['judge_score']}, "
             f"threshold {disagreement['judge_threshold']}. {disagreement['judge_reason']}", "",
         ])
     lines.extend(["", "## Interpretation", "", report["interpretation"], ""])
+    if report["prior_exposure"] == "scores_or_findings_seen":
+        lines.extend(["This review was non-blinded: prior scores or findings had been seen. "
+                      "Independent blinded validation remains outstanding.", ""])
+    if report["reason_coverage"]["missing_written_reasons"]:
+        lines.extend(["Some recorded verdicts have no human-written explanation. Missing reasons "
+                      "are reported separately from rating coverage; no AI rationale is attributed to the human.", ""])
+    if report.get("evidence_files"):
+        lines.extend(["## Evidence", ""])
+        labels = {"source_results": "Original pilot results", "human_review": "Human review worksheet"}
+        for key, target in report["evidence_files"].items():
+            lines.append(f"- [{labels[key]}]({target})")
+        lines.append("")
+    lines.extend(["## Evidence fingerprints", "",
+                  f"- Source results: `{report['source_sha256']}`.",
+                  f"- Human worksheet: `{report['human_review_sha256']}`."])
+    lines.append("")
     return "\n".join(lines)
