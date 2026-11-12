@@ -64,6 +64,12 @@ The first opening-time correctness explanation invented a typo; later explanatio
 
 The original run remains in the ignored run folder. Exact copies of its [JSON](../results/examples/consistency-results.json) and [summary](../results/examples/consistency-summary.md), plus separately attributed [assistant audit notes](../results/examples/consistency-review-notes.json), are prepared as portable examples. The audit recomputed the saved summary, verified nine answer-prompt hashes and reconstructed all 18 G-Eval prompts, also checking raw-score normalization. Original answers, scores and reasons were preserved. These checks do not replace genuine human validation.
 
+## Review the saved responses manually
+
+The [consistency human-review workflow](consistency-human-review.md) prepares a separate worksheet with nine trial rows and 27 empty metric decisions. It uses the saved results and makes no inference calls. Each row preserves the original case ID, repeat number and fixed trial ID, along with its context, references and actual response.
+
+The existing review command recognizes the consistency source automatically. Human ratings and reasons are entered separately for each repeat, then compared with that repeat's saved judge decisions. Reports show coverage for questions, trials and metric decisions; they exclude unreviewed/uncertain ratings from agreement. Original model results and the ten-case review remain unchanged. The nine-trial human review is pending until a person enters the ratings.
+
 ## Recover interrupted work
 
 Every response and metric is checkpointed. To continue an interrupted or errored run, use `python scripts/run_consistency.py --resume RUN_FOLDER`. The saved case selection and repeat count are used by default. Completed answers and metrics are retained, while unfinished or errored work is retried as part of that same logical experiment.

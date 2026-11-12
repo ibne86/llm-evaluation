@@ -4,7 +4,7 @@ A Python QA project that evaluates an existing local language model with pytest,
 
 ## Current status
 
-The ten-case development pilot, all 30 metric evaluations and the first nine-trial consistency experiment are complete. Offline harness tests: **96 passed**. Ibne completed a manual pilot review with **30/30 verdicts**: **25/30 match the local judge (83.3%)**. Ibne has now supplied written reasons for all 30 decisions in a separate follow-up copy. Prior AI findings were visible, so the review remains non-blinded. Independent blinded validation and the separate final 50-case evaluation remain outstanding.
+The ten-case development pilot, all 30 metric evaluations and the first nine-trial consistency experiment are complete. Offline harness tests: **127 passed**. Ibne completed a manual pilot review with **30/30 verdicts**: **25/30 match the local judge (83.3%)**. Ibne has now supplied written reasons for all 30 decisions in a separate follow-up copy. Prior AI findings were visible, so the review remains non-blinded. Human-review tooling for the nine consistency responses is implemented; its 27 manual ratings remain pending. Independent blinded validation has not been performed, and the separate final 50-case evaluation remains outstanding.
 
 The original models remain unchanged:
 
@@ -113,6 +113,14 @@ The county answer remained the unsupported `15`. The opening-time answer remaine
 
 See the [recorded consistency summary](results/examples/consistency-summary.md), [full results](results/examples/consistency-results.json), and [assistant audit notes](results/examples/consistency-review-notes.json). The audit verified all nine answer-prompt hashes and all 18 G-Eval prompt hashes/raw score normalizations. These nine consistency trials have not received separate human ratings; the completed manual review below covers the original ten-case pilot.
 
+The [consistency human-review guide](docs/consistency-human-review.md) explains how to review each saved repeat separately. Prepare an unlabeled worksheet offline:
+
+```powershell
+python scripts/review_judge.py prepare --results results/examples/consistency-results.json --output results/reviews/consistency-human-review.json
+```
+
+Fill the 27 judgments and reasons yourself, then use the comparison command in the guide. The worksheet preserves case IDs and repeat numbers; identical answers remain separate review items. The original ten-case review and model results are unchanged.
+
 ## Evaluation methods
 
 | Area | Method | Passing threshold |
@@ -166,6 +174,6 @@ Original run snapshots retain their earlier review status. Limitations include p
 
 ## Remaining milestones
 
-Next: record the pilot calibration decision, freeze final evaluation settings, prepare the separate 50-case set and complete the final analysis. The completed non-blinded manual review is documented above; independent blinded validation remains outstanding. Human comparison examples and code are prepared on this branch for inspection. Git commits, pushes, merges and branch cleanup remain manual.
+Next: enter and compare the 27 human judgments for the saved consistency trials, record the pilot calibration decision, freeze final evaluation settings, prepare the separate 50-case set and complete the final analysis. The completed non-blinded manual review is documented above; independent blinded validation remains outstanding. Human comparison examples and code are prepared on this branch for inspection. Git commits, pushes, merges and branch cleanup remain manual.
 
 Progress is tracked in [PROGRESS.md](docs/PROGRESS.md) and the [project plan](docs/PROJECT_PLAN.md). A software license has not yet been selected. Dataset material is CC BY-SA 4.0; model licenses are separate, and model files are not included in the repository.
