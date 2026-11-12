@@ -1,6 +1,6 @@
 # Project progress
 
-Updated: 12 November 2026. Current status: ten-case manual review complete, with 30/30 written human reasons added in a follow-up version (30/30 verdicts, 25/30 local-judge matches); independent blinded validation and final evaluation remain outstanding. Earlier entries are historical checkpoints.
+Updated: 12 November 2026. Current status: the ten-case manual review is complete, with 30/30 written reasons and 25/30 local-judge matches. Human-review tooling for nine consistency responses is implemented; its 27 human ratings remain pending. Final evaluation has not started. Earlier entries are historical checkpoints.
 
 ## Completed
 
@@ -21,12 +21,11 @@ Updated: 12 November 2026. Current status: ten-case manual review complete, with
 
 ## Remaining work
 
-1. Inspect and commit the follow-up pilot review with 30 written reasons and updated documentation, then push and merge manually.
+1. Enter the 27 human judgments and reasons for the nine saved consistency responses, compare them with the judge and inspect disagreements.
 2. Record the pilot calibration decision before freezing final evaluation settings.
 3. Prepare the separate final 50-case set with pilot source IDs and contexts excluded, then run the final evaluation.
-4. Complete the remaining regression/reporting features and final analysis.
-5. Preserve the completed non-blinded manual review and its limitations; independent blinded validation remains a separate outstanding milestone.
-6. Review further publication contents and publish only with explicit user approval.
+4. Complete remaining real-model regression coverage, reporting and final analysis.
+5. Finish portfolio documentation and publication. Independent blinded review remains an additional validation option; the present manual review's prior exposure is disclosed.
 
 ## Hardware constraints
 
@@ -34,7 +33,7 @@ The screenshots show 16 GB installed RAM (15.7 GB usable) with 1.9 GB available 
 
 ## Publication status
 
-The user published the baseline and merged the human-review tooling, offline CI and response-consistency feature into [the GitHub repository](https://github.com/ibne86/llm-evaluation). The current branch, `codex/pilot-review-findings`, prepares saved pilot review examples and documentation for inspection. Commits, pushes, merges and branch cleanup remain manual. Local working reviews and generated runs remain ignored; the final 50-case dataset has not been prepared.
+The baseline, human-review tooling, offline CI, response-consistency experiment and completed ten-case manual review are published in [the GitHub repository](https://github.com/ibne86/llm-evaluation); PR #4 was merged into main. The user created `codex/consistency-human-review` for the next feature. This branch adds review support for saved repeats; actual consistency ratings are still pending. Commits, pushes, merges and branch cleanup remain manual. Working reviews and generated runs remain ignored; the final 50-case dataset has not been prepared.
 
 ## Step 2a: Ollama application
 
@@ -191,3 +190,12 @@ Both original models remain unchanged. The qwen3:4b judge passed two native sche
 - Removed the optional assistant-reference argument, secondary-comparison code, report fields, evidence links and obsolete feature tests. Rebuilt the human reports using only source results and the human worksheet; all 30 verdicts, 30 written reasons, original scores and 25/30 agreement remain unchanged.
 - Validation: 96 offline tests passed, including reproduction of both published human-review versions. Verified input fingerprints, primary comparison fields, Markdown tables, evidence links and the absence of deleted-file dependencies. No model inference was run.
 - Prior exposure to AI findings remains disclosed; the review is non-blinded. Independent blinded validation and separate manual ratings for the nine consistency responses remain outstanding. Git staging, commits, pushes and branch cleanup remain manual.
+
+## Consistency human-review workflow implemented — ratings pending
+
+- The user created `codex/consistency-human-review` from updated main. Extended the offline review command to validate and review saved consistency runs without model inference; existing schema-version-1 pilot packets remain compatible.
+- Added schema-version-2 trial worksheets that retain the original case ID, integer repeat and fixed trial ID. Reused the source trial-matrix checks and retained source/evidence fingerprints, thresholds, judgment validation and reason policies.
+- Comparisons retain trial identity, distinguish question/trial/rating coverage and exclude uncertain or unreviewed judgments. Fully reviewed questions require all their repeats to be rated. Repeated observations are explicitly described as correlated.
+- Prepared the real nine-response local worksheet with 27 null verdicts, empty reasons and declared prior exposure. No human ratings were invented or copied, and no completed human agreement is claimed.
+- Validation: 127 offline tests passed, including 31 new checks for repeated identities, duplicated/missing trials, changed evidence, metadata, response hashes, incomplete sources, trial-specific grading, reason policies, reordered reviews and CLI preservation. The original 96 tests still pass.
+- Next: the user reviews all nine responses and supplies 27 judgments/reasons, then generates a fresh human-versus-local-judge comparison. Original pilot and consistency measurements and existing manual reviews remain unchanged.

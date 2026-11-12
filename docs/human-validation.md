@@ -52,3 +52,11 @@ Keep initial ratings unchanged and record investigation notes separately. A late
 The completed pilot manual review and independent blinded validation are different milestones. The latter remains outstanding. Prior exposure, one reviewer's subjectivity, the small sample, shared model-family bias and judge variability limit interpretation. Do not tune prompts on the eventual final set or rewrite historical model scores to match human ratings.
 
 Working reviews under `results/reviews/` remain ignored by Git. The explicit copies in `results/examples/` make the completed review and its evidence available to portfolio readers. Original run snapshots retain their status at the time they were recorded.
+
+## Saved consistency trials
+
+The same command also supports [human review of consistency responses](consistency-human-review.md). It recognizes `response_consistency` sources and creates schema-version-2 packets with `case_id`, `repeat` and a fixed `trial_id`. The original pilot format remains supported unchanged.
+
+For the included experiment, three questions and three repeats produce nine worksheet rows and 27 possible metric pairs. The command validates the complete trial matrix, source metadata, source fingerprint, response hashes, scores and frozen evidence before pairing ratings. A repeat can be graded independently even when its text matches another repeat. Coverage and disagreements retain trial identity; repeats do not count as independent samples.
+
+This consistency worksheet is separate from the completed ten-case pilot review. It starts without human labels, and its manual ratings remain pending.

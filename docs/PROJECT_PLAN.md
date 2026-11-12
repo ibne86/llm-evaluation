@@ -1,6 +1,6 @@
 # Local LLM Evaluation — project plan and progress
 
-Prepared: 10 November 2026. Updated: 12 November 2026. Current status: the ten-case pilot, repeated-response experiment and manual pilot review are complete. Ibne supplied 30/30 verdicts, with 25/30 matching the original local judge. The manual review was non-blinded; a separate follow-up now includes all 30 written human rationales while preserving the initial version without reasons. Independent blinded validation and the final 50-case evaluation remain outstanding. The original model pair is unchanged; earlier setup/checkpoint sections below are historical records.
+Prepared: 10 November 2026. Updated: 12 November 2026. Current status: the ten-case pilot, repeated-response experiment and manual pilot review are complete. Ibne supplied 30/30 verdicts, with 25/30 matching the original local judge. The manual review was non-blinded; a separate follow-up now includes all 30 written human rationales while preserving the initial version without reasons. Independent blinded validation and the final 50-case evaluation remain outstanding. The original model pair is unchanged. Human-review tooling for nine consistency trials is implemented; 27 user ratings remain pending. Earlier setup/checkpoint sections below are historical records.
 
 ## Objective and boundaries
 
@@ -157,16 +157,16 @@ This is the intended final structure; create files only when their implementatio
 3. Prepare and validate the 10-case pilot with attribution. **0.5–1 hour.** Complete; data/pilot.json contains the documented 6/2/2 development sample.
 4. Implement context-based generation, abstention instructions, response capture and a performance baseline. **1–1.5 hours.** Complete for the pilot; generated answers are saved separately from immutable inputs.
 5. Integrate the local DeepEval judge, validate structured output and rubric smoke checks, then run the 10-case pilot. **2–2.5 hours.** Complete for the pilot; all 30 metrics executed with zero execution errors.
-6. Produce the first report, verify saved outputs and review the pilot with the user. **1–1.5 hours.** JSON/CSV/Markdown reports and examples saved; user review pending. **Do not prepare the final set before this review.**
+6. Produce the first report, verify saved outputs and review the pilot with the user. Complete: JSON/CSV/Markdown reports and the ten-case manual review with 30 written reasons are published. Original outputs are preserved.
 
 ### Milestone 2 — completion, 9–16 additional hours
 
 7. Freeze configuration/rubrics and prepare the separate 50-case final dataset with the required composition and custom behaviors. **1.5–2.5 hours.** Pending.
-8. Add remaining metrics, consistency runs and automated regression checks. **2–3.5 hours.** Pending.
+8. Add remaining metrics, consistency runs and automated regression checks. Consistency execution and offline human-review tooling are implemented; the 27 consistency ratings and remaining real-model regression coverage are pending.
 9. Prepare the human review sheet and analyze agreement/disagreements. Completed for all ten pilot cases: 30 non-blinded human verdicts, 25/30 local-judge matches, and 30 written human rationales in a follow-up version. The initial version without reasons is preserved. Independent blinded review remains outstanding.
 10. Complete reporting, failure analysis and reproducible example artifacts. **1.5–2.5 hours.** Pending.
 11. Finish README, setup/reproduction instructions, dataset documentation and limitations. **1.5–3 hours.** Pending.
-12. Review the exact publication contents with the user; publish to GitHub only when approved. **0.5–1.5 hours.** Pending.
+12. Review publication contents and publish only when approved. Baseline, CI, consistency and ten-case manual review features are published. Publication of the new consistency-review tooling remains pending; Git operations are manual.
 
 Milestone 2 subtotal: **8.5–16 hours**, rounded planning allowance **9–16 hours**. Overall estimate remains **15–25 hours** of active work including learning and human review. Model downloads, CPU-only evaluation wall time, dependency problems and waiting for review may extend elapsed time. Re-estimate model runtime after the pilot instead of promising unmeasured throughput.
 
@@ -190,9 +190,9 @@ Milestone 2 subtotal: **8.5–16 hours**, rounded planning allowance **9–16 ho
 
 ## Next checkpoint
 
-Inspect the [manual pilot findings](pilot-review-findings.md), compatible comparison command and publishable human worksheet/report. Human/local-judge agreement is 25/30 (83.3%), with five disagreements. The follow-up manual review is complete, with 30/30 written reasons and prior exposure explicitly recorded. The initial version without reasons is preserved. Independent blinded validation remains outstanding.
+Use the [consistency human-review worksheet](consistency-human-review.md) to assess the nine saved responses independently by repeat and enter 27 judgments with reasons. Generate a comparison that reports trial-specific decisions and coverage. The ten-case manual review remains complete, and original model outputs and scores are preserved.
 
-After the manual Git publication steps, record the pilot calibration decision and freeze settings before preparing the separate final 50-case set. Preserve the original model outputs/scores and exclude pilot source IDs and contexts. Git operations remain manual.
+After reviewing consistency disagreements, record the pilot calibration decision and freeze settings before preparing the separate final 50-case set. Exclude pilot source IDs and contexts from that set. Prior exposure to AI findings remains disclosed; independent blinded review would provide additional validation. Git operations remain manual.
 
 ## First measured answer-model baseline
 
