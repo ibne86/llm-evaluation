@@ -32,7 +32,6 @@ def main(argv=None):
     compare = commands.add_parser("compare", help="Compare human labels; no model inference.")
     compare.add_argument("--results", required=True, help="The same saved results.json file.")
     compare.add_argument("--review", required=True, help="Human-completed review JSON.")
-    compare.add_argument("--assistant-review", help="Optional earlier AI review, kept as a secondary reference.")
     compare.add_argument("--output-dir", required=True, help="Folder for new comparison.json and comparison.md.")
     args = parser.parse_args(argv)
     try:
@@ -42,15 +41,12 @@ def main(argv=None):
             _new_file(args.output, json.dumps(packet, ensure_ascii=False, indent=2) + "\n")
             print(f"Prepared {len(packet['reviews'])} cases with no human labels: {args.output}")
         else:
-            assistant = _read_json(args.assistant_review) if args.assistant_review else None
-            report = compare_review(state, _read_json(args.review), assistant_review=assistant)
+            report = compare_review(state, _read_json(args.review))
             folder = Path(args.output_dir)
             paths = (folder / "comparison.json", folder / "comparison.md")
             if any(path.exists() for path in paths):
                 raise ValueError("Comparison already exists. Choose a new output directory to keep previous evidence.")
             evidence = {"source_results": args.results, "human_review": args.review}
-            if args.assistant_review:
-                evidence["assistant_review"] = args.assistant_review
             report["evidence_files"] = {}
             for key, path in evidence.items():
                 target = Path(path).resolve()

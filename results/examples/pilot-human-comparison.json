@@ -70,10 +70,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.7,
       "judge_reason": "The score is 1.00 because there are no irrelevant statements in the actual output, so it's fully relevant to the input question about civil disobedience.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "The response directly answers what civil disobedience relates to, without unrelated content.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 1,
@@ -86,10 +83,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.7,
       "judge_reason": "The Actual Output correctly identifies civil disobedience as relating to a citizen's relation to the state and its laws, which matches the Expected Output's semantic equivalents. The context explicitly defines civil disobedience in this way, so the answer is fully correct and aligns with the evaluation steps.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "It expresses the same meaning as both reference alternatives: the citizen's relation to the state and its laws.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 1,
@@ -102,10 +96,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.8,
       "judge_reason": "The Actual Output correctly states that civil disobedience relates to a citizen's relation to the state and its laws, which is directly supported by the Context. The Context explicitly defines civil disobedience as pertaining to a citizen's relation to the state and its laws, matching the Actual Output without adding unsupported claims. Thus, all claims are fully supported, resulting in a score of 10.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "The opening sentence of the supplied passage explicitly supports the response's only factual claim.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 2,
@@ -118,10 +109,7 @@
       "judge_score": 0.5,
       "judge_threshold": 0.7,
       "judge_reason": "The score is 0.50 because the output incorrectly states that the type III secretion system shuts down host defenses, which is irrelevant to the question about the purpose of protein transport to the host cell. The score cannot be higher because the output fails to address the actual question about protein function, focusing instead on a system function unrelated to the query's intent.",
-      "human_matches_judge": false,
-      "assistant_verdict": "pass",
-      "assistant_reason": "The response directly states the purpose of transporting the proteins into the host cell.",
-      "human_matches_assistant": true
+      "human_matches_judge": false
     },
     {
       "case_number": 2,
@@ -134,10 +122,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.7,
       "judge_reason": "The Actual Output correctly identifies that proteins are transported to shut down host defenses, matching the Expected Output's semantic equivalent. The Context explicitly states that 'These proteins are often used to shut down host defenses,' confirming the answer is accurate and sufficient context was provided.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "Shutting down host defenses matches the reference answer. Repeating part of the question does not change the answer's meaning.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 2,
@@ -150,10 +135,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.8,
       "judge_reason": "The Actual Output claims proteins are transported to shut down host defenses, which is directly supported by the Context: 'These proteins are often used to shut down host defenses.' Thus, all claims are factually grounded, leading to a score of 10.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "The passage describes type III protein transport into the host and then states that these proteins are often used to shut down host defenses.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 3,
@@ -166,10 +148,7 @@
       "judge_score": 0.5,
       "judge_threshold": 0.7,
       "judge_reason": "The score is 0.50 because the output incorrectly states that the Alter Rhein is known as the Old Rhine without addressing the west boundary of the Rhine delta, which is the core question. The score cannot be higher as the output fails to provide the west boundary information directly, making it irrelevant to the query.",
-      "human_matches_judge": false,
-      "assistant_verdict": "pass",
-      "assistant_reason": "The response identifies the requested western boundary. The parenthetical alias is relevant clarification.",
-      "human_matches_assistant": true
+      "human_matches_judge": false
     },
     {
       "case_number": 3,
@@ -182,10 +161,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.7,
       "judge_reason": "The Actual Output correctly identifies 'Alter Rhein' as the western delimiter, matching the Expected Output's semantic equivalents. The response uses only Context without inventing facts, and the context explicitly states the western delimiter is the Alter Rhein. This aligns perfectly with the evaluation steps.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "Alter Rhein matches the reference alternatives. Adding the passage's English alias, Old Rhine, preserves the meaning.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 3,
@@ -198,10 +174,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.8,
       "judge_reason": "The Actual Output correctly states the delta is delimited in the West by the Alter Rhe:in, which matches the Context. However, the Context specifies the delta is delimited in the West by the Alter Rhein, so the output is fully supported. The score is 10 as all claims are directly supported by the Context without contradiction.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "The passage explicitly identifies Alter Rhein as the western boundary and supplies Old Rhine as its alias.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 4,
@@ -214,10 +187,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.7,
       "judge_reason": "The score is 1.00 because there are no irrelevant statements in the actual output, indicating perfect relevance to the question about the Amazon rainforest's threat timeline from computer models.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "The refusal concerns the duration requested by the question, so it is on topic. This rubric allows relevant abstentions.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 4,
@@ -230,10 +200,7 @@
       "judge_score": 0.3,
       "judge_threshold": 0.7,
       "judge_reason": "The Actual Output correctly identifies insufficient context but the Expected Output specifies 'though the 21st century' as an acceptable answer. The Context mentions 'by 2100' and 'threatened though the 21st century', so the answer should align with the Expected Output. The Actual Output fails to match the Expected Output's semantic equivalent, resulting in a score of 3.",
-      "human_matches_judge": true,
-      "assistant_verdict": "fail",
-      "assistant_reason": "The context gives the requested time horizon: the 21st century, with a model projecting loss by 2100. The question asks how long the threat may persist, not for an exact numerical duration. The reference's wording, 'though the 21st century', contains a source typo but still identifies the period. Refusing to answer omits available information.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 4,
@@ -246,10 +213,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.8,
       "judge_reason": "The Actual Output correctly identifies insufficient context to determine the exact duration, aligning with the Context's lack of specific timeframes for threat duration. The Context mentions 'by 2100' but does not provide a precise duration for the threat, so the output is grounded and accurate. Score 10 for full alignment with evaluation steps.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "The response abstains without introducing an unsupported factual answer about the rainforest. Under the frozen rubric, abstention is grounded even when the decision to abstain fails correctness.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 5,
@@ -262,10 +226,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.7,
       "judge_reason": "The score is 1.00 because there are no irrelevant statements in the actual output, meaning the response directly and accurately answers the question about the nationality that invented the steam turbine without any extraneous information.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "British directly supplies the national attribution requested by the question.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 5,
@@ -278,10 +239,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.7,
       "judge_reason": "The response correctly identifies 'British' as the answer, matching the Expected Output. The Context explicitly states 'British invention steam turbine', confirming the nationality without ambiguity. The answer is fully correct and aligns with the Context without needing additional interpretation.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "British exactly matches the supplied reference answer.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 5,
@@ -294,10 +252,7 @@
       "judge_score": 0.3,
       "judge_threshold": 0.8,
       "judge_reason": "The Actual Output claims British nationality for the steam turbine inventor, but Context states it was a British invention without specifying nationality. The claim is unsupported as Context only mentions British origin without confirming nationality.",
-      "human_matches_judge": false,
-      "assistant_verdict": "pass",
-      "assistant_reason": "The passage calls the steam turbine a British invention. At the national-attribution level intended by this question, British is supported. This assessment does not infer the citizenship or biography of a named individual.",
-      "human_matches_assistant": true
+      "human_matches_judge": false
     },
     {
       "case_number": 6,
@@ -310,10 +265,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.7,
       "judge_reason": "The score is 1.00 because there are no irrelevant statements in the actual output, so it's fully relevant to the input question about the 17th-century conflict between France and the Dutch.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "The response supplies a year, which directly addresses the question asking when the conflict occurred.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 6,
@@ -326,10 +278,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.7,
       "judge_reason": "The response correctly identifies 1672 as the year France and the Dutch fought, matching the Expected Output. The Context confirms the French attack on the Dutch Republic in 1:672, so the answer is fully correct with no invented or incorrect details.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "1672 exactly matches the reference answer.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 6,
@@ -342,10 +291,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.8,
       "judge_reason": "The Actual Output '1672' is factually supported by the Context, which states that the French attacked the Dutch Republic in 1672. This aligns with the evaluation steps as the Context provides direct evidence for the year 1672. The score is 10 because all claims are supported without contradiction or unsupported assertions.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "The context explicitly states that the French attacked the Dutch Republic in 1672.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 7,
@@ -358,10 +304,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.7,
       "judge_reason": "The score is 1.00 because there are no irrelevant statements in the output, meaning the answer directly addresses the question about populous counties in the United States without any extraneous information.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "The response attempts the numerical count requested by the question. Being incorrect does not by itself make a response off topic.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 7,
@@ -374,10 +317,7 @@
       "judge_score": 0.0,
       "judge_threshold": 0.7,
       "judge_reason": "The Actual Output '15' incorrectly claims a specific number without context supporting it. The Context only states that Los Angeles, Orange, San Diego, San Bernardino, and Riverside are the top 5 in the state and all are in the top 15 nationally, but does not provide the total number of populous counties in the US. The Expected Output correctly identifies INSUFFICIENT_CONTEXT as the answer, so the Actual Output is wrong and invented.",
-      "human_matches_judge": true,
-      "assistant_verdict": "fail",
-      "assistant_reason": "The passage ranks five named counties among the country's top fifteen; it does not establish the total number of populous counties in the United States. The supported behavior is to acknowledge insufficient context.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 7,
@@ -390,10 +330,7 @@
       "judge_score": 0.0,
       "judge_threshold": 0.8,
       "judge_reason": "The Actual Output claims 15 populous counties in the US, but Context only states that 5 specific counties are in the top 15, not that there are 15 total populous counties. This unsupported claim results in a score of 0.",
-      "human_matches_judge": true,
-      "assistant_verdict": "fail",
-      "assistant_reason": "Interpreted as an answer to this question, 15 asserts a nationwide count that the passage does not support. A ranking cutoff is not evidence of the requested total.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 8,
@@ -406,10 +343,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.7,
       "judge_reason": "The score is 1.00 because there are no irrelevant statements in the actual output, meaning the response directly and accurately answers the question about the University of Chicago Press accreditation without any extraneous information.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "The response names an accrediting commission for the Press, directly addressing the requested subject and relationship.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 8,
@@ -422,10 +356,7 @@
       "judge_score": 0.0,
       "judge_threshold": 0.7,
       "judge_reason": "The Actual Output claims accreditation by The Higher Learning Commission, but the Context explicitly states the university is accredited by The Higher Learning Commission. However, the Expected Output lists INSUFFICIENT_CONTEXT, indicating the context should not determine the answer. The error arises because the context provides sufficient information, yet the Expected Output incorrectly assumes insufficient context, making the Actual Output correct but the Expected Output invalid. This leads to a score of 0 due to the Expected Output misrepresenting the context's sufficiency.",
-      "human_matches_judge": true,
-      "assistant_verdict": "fail",
-      "assistant_reason": "The source says the university is accredited, while the question asks about its Press. It provides no accreditation statement about the Press, so the expected behavior is to acknowledge insufficient context.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 8,
@@ -438,10 +369,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.8,
       "judge_reason": "The Actual Output correctly states the accreditation body as The Higher Learning Commission, which is directly supported by the Context. The Context explicitly mentions 'The university is accredited by The Higher Learning Commission,' so the claim is fully supported with no unsupported claims. This aligns perfectly with the evaluation steps, scoring 10.",
-      "human_matches_judge": false,
-      "assistant_verdict": "fail",
-      "assistant_reason": "The response transfers an accreditation claim from the university to its Press. The passage listing the Press as part of the university does not establish that specific accreditation relationship.",
-      "human_matches_assistant": true
+      "human_matches_judge": false
     },
     {
       "case_number": 9,
@@ -454,10 +382,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.7,
       "judge_reason": "The score is 1.00 because there are no irrelevant statements in the output, meaning the response directly and accurately answers the question with sufficient context.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "A researcher's name directly addresses the question asking who approved the study.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 9,
@@ -470,10 +395,7 @@
       "judge_score": 0.0,
       "judge_threshold": 0.7,
       "judge_reason": "The Actual Output 'Alex Reed' incorrectly assumes a surname where the context only states 'Alex approved the study' without a surname. The Expected Output correctly identifies INSUFFICIENT_CONTEXT since the context lacks a surname to confirm the researcher's identity.",
-      "human_matches_judge": true,
-      "assistant_verdict": "fail",
-      "assistant_reason": "Both researchers are named Alex and the approval note provides no surname. It does not distinguish Reed from Khan, so selecting Reed is unjustified; the expected response is insufficient context.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 9,
@@ -486,10 +408,7 @@
       "judge_score": 0.0,
       "judge_threshold": 0.8,
       "judge_reason": "The Actual Output claims 'Alex Reed' approved the study, but Context only states 'Alex approved the study' without a surname. The central claim is unsupported as the context does not specify the full name, so score is 0.",
-      "human_matches_judge": true,
-      "assistant_verdict": "fail",
-      "assistant_reason": "The response attributes approval to Alex Reed specifically, but the context supports only an unspecified Alex. Reed being named elsewhere in the passage does not support that attribution.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 10,
@@ -502,10 +421,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.7,
       "judge_reason": "The score is 1.00 because there are no irrelevant statements in the actual output, so it's fully relevant to the input question about the support desk opening time.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "The opening time directly answers the question without unrelated text.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     },
     {
       "case_number": 10,
@@ -518,10 +434,7 @@
       "judge_score": 0.0,
       "judge_threshold": 0.7,
       "judge_reason": "The response '09:0:0' is incorrect as it does not match any expected outputs. The context specifies the support desk opens at 09:00, but the actual output has a typo (09:00 vs 09:0:0), making it invalid. Expected outputs include '09:00', '9:00 AM', and '9 am', so the response is wrong.",
-      "human_matches_judge": false,
-      "assistant_verdict": "pass",
-      "assistant_reason": "09:00 exactly matches an acceptable reference answer and the office policy's opening time.",
-      "human_matches_assistant": true
+      "human_matches_judge": false
     },
     {
       "case_number": 10,
@@ -534,10 +447,7 @@
       "judge_score": 1.0,
       "judge_threshold": 0.8,
       "judge_reason": "The Actual Output claims the support desk opens at 09:00, which is directly stated in the Context as 'the support desk opens at 09:00 on weekdays'. This claim is fully supported by the Context, so the score should be 10. The quoted note in the Context is irrelevant to the factual claim about opening times and does not affect the support.",
-      "human_matches_judge": true,
-      "assistant_verdict": "pass",
-      "assistant_reason": "The office policy explicitly states 09:00. The quoted visitor instruction is data rather than an instruction governing the answer.",
-      "human_matches_assistant": true
+      "human_matches_judge": true
     }
   ],
   "disagreements": [
@@ -632,37 +542,8 @@
     }
   ],
   "interpretation": "Agreement is matching human/judge metric decisions divided by explicit paired decisions, not model accuracy or proof of judge validity. Unreviewed/uncertain labels are excluded and reduce coverage. These pilot cases are development data, not a representative benchmark. Prior exposure to scores/findings can bias human ratings. Keep the original labels; record disagreement investigations separately.",
-  "assistant_reviewer": "AI reviewer",
-  "assistant_review_sha256": "59aed4a99a0698c2bf255baa1aaa24149e82eb6fef3477fc7fb2c269cec040b1",
-  "assistant_comparison": {
-    "paired_decisions": 30,
-    "matching_decisions": 30,
-    "agreement_rate": 1.0,
-    "excluded_decisions": 0,
-    "metrics": {
-      "answer_relevancy": {
-        "paired_decisions": 10,
-        "matching_decisions": 10,
-        "agreement_rate": 1.0,
-        "excluded_decisions": 0
-      },
-      "correctness": {
-        "paired_decisions": 10,
-        "matching_decisions": 10,
-        "agreement_rate": 1.0,
-        "excluded_decisions": 0
-      },
-      "groundedness": {
-        "paired_decisions": 10,
-        "matching_decisions": 10,
-        "agreement_rate": 1.0,
-        "excluded_decisions": 0
-      }
-    }
-  },
   "evidence_files": {
     "source_results": "pilot-results.json",
-    "human_review": "pilot-human-review.json",
-    "assistant_review": "pilot-assistant-review.json"
+    "human_review": "pilot-human-review.json"
   }
 }

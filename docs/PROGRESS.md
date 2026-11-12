@@ -1,6 +1,6 @@
 # Project progress
 
-Updated: 11 November 2026. Current status: ten-case manual review complete (30/30 verdicts, 25/30 local-judge matches); independent blinded validation and final evaluation remain outstanding. Earlier entries are historical checkpoints.
+Updated: 12 November 2026. Current status: ten-case manual review complete, with 30/30 written human reasons added in a follow-up version (30/30 verdicts, 25/30 local-judge matches); independent blinded validation and final evaluation remain outstanding. Earlier entries are historical checkpoints.
 
 ## Completed
 
@@ -21,7 +21,7 @@ Updated: 11 November 2026. Current status: ten-case manual review complete (30/3
 
 ## Remaining work
 
-1. Inspect and commit the prepared pilot review examples and documentation, then push and merge manually.
+1. Inspect and commit the follow-up pilot review with 30 written reasons and updated documentation, then push and merge manually.
 2. Record the pilot calibration decision before freezing final evaluation settings.
 3. Prepare the separate final 50-case set with pilot source IDs and contexts excluded, then run the final evaluation.
 4. Complete the remaining regression/reporting features and final analysis.
@@ -160,7 +160,7 @@ Both original models remain unchanged. The qwen3:4b judge passed two native sche
 - Prepared portable result/summary copies and separate assistant audit notes in `results/examples`. Preserved the original local experiment and original scores/reasons. Elapsed time: 459.903 seconds, including 11.703 seconds of generation requests and 446.937 seconds of metric evaluations.
 - Next checkpoint: review the findings, make focused code/results commits and open a pull request. Genuine human validation and the separate final 50-case evaluation remain pending.
 
-## Earlier AI review examples prepared for publication
+## Earlier AI review examples — retired on 12 November 2026
 
 - The user created `codex/pilot-review-findings` from a clean, up-to-date `main` after merging the response-consistency feature.
 - Prepared four portable review/comparison examples and a findings guide. Ibne is the review owner; AI assessment authorship and declared prior exposure are explicit. Local working files and the genuine-human review worksheet are preserved.
@@ -172,7 +172,22 @@ Both original models remain unchanged. The qwen3:4b judge passed two native sche
 
 - Ibne confirmed completing the manual check and recorded 30/30 human pass/fail verdicts. Human/local-judge agreement is 25/30 (83.3%); relevancy 8/10, correctness 9/10, groundedness 8/10. Human/earlier-assistant agreement is 30/30. Prior exposure was declared; written human reasons were not collected.
 - Added an explicit optional-reason collection policy while preserving the required-reason default and legacy packets. Supported human metadata is validated; completion is derived from verdicts. Source, rubric and case evidence checks remain enforced.
-- Added optional secondary AI-reference comparison, per-input content fingerprints, written-reason coverage, all paired decisions and portable evidence links. The earlier assistant assessment keeps its AI authorship.
+- Added optional secondary AI-reference comparison, per-input content fingerprints, written-reason coverage, all paired decisions and portable evidence links. The optional standalone assistant comparison was later retired after the manual review was completed.
 - Prepared publishable human worksheet and JSON/Markdown comparison examples, fixed the findings links and repaired the earlier AI comparison's Markdown tables. Local pre-alignment worksheet/report snapshots are archived under ignored results/reviews/archive.
 - Verification: 103 offline unit tests passed, including the real published review reproduction and new checks for metadata, optional reasons, fingerprints, AI-reference validation, denominators and CLI preservation. Report counts, source evidence, relative links and table rendering were checked without model inference.
 - The original model pair, settings, original pilot/consistency outputs and raw scores are unchanged. The separate consistency trials have no human ratings. Next: inspect changes, make focused commits and publish manually; then record the calibration decision before freezing final evaluation settings.
+
+## Follow-up manual review with written reasons — 12 November 2026
+
+- Ibne added 30 written human reasons in a separate review copy. All ten cases, source evidence and 30 pass/fail verdicts are unchanged. Human/local-judge agreement remains 25/30 (83.3%); human/earlier-assistant agreement remains 30/30.
+- Prepared a new publishable worksheet and JSON/Markdown comparison with reasons, retaining the initial zero-reason version and all original model responses and judge scores. The follow-up keeps the optional-reason policy, with actual coverage of 30/30 written reasons.
+- Updated current documentation, evidence links, reproduction commands and per-input fingerprints. Verified every written reason against the local worksheet, all paired decisions, the unchanged historical versions, relative links and rendered report tables. No model inference or executable-code changes were needed; the last offline suite result remains 103 passed.
+- The review remains non-blinded because prior AI findings had been seen. Independent blinded validation and separate human ratings for the nine consistency responses remain outstanding.
+- Next: inspect and publish this focused update manually, then implement the nine-trial human-review worksheet before final evaluation work.
+
+## Human-versus-judge cleanup — 12 November 2026
+
+- Removed the redundant standalone AI review/comparison files and obsolete local comparison snapshots. Kept the original model results, both versions of the human worksheet, written reasons, and human-versus-local-judge reports.
+- Removed the optional assistant-reference argument, secondary-comparison code, report fields, evidence links and obsolete feature tests. Rebuilt the human reports using only source results and the human worksheet; all 30 verdicts, 30 written reasons, original scores and 25/30 agreement remain unchanged.
+- Validation: 96 offline tests passed, including reproduction of both published human-review versions. Verified input fingerprints, primary comparison fields, Markdown tables, evidence links and the absence of deleted-file dependencies. No model inference was run.
+- Prior exposure to AI findings remains disclosed; the review is non-blinded. Independent blinded validation and separate manual ratings for the nine consistency responses remain outstanding. Git staging, commits, pushes and branch cleanup remain manual.

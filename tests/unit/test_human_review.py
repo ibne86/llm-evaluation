@@ -194,13 +194,6 @@ def complete_packet(state, *, reason_policy="required"):
     return packet
 
 
-def assistant_packet(state):
-    packet = complete_packet(state)
-    packet.update(review_type="assistant_generated", reviewer_type="ai_assistant",
-                  reviewer="synthetic-ai-reference")
-    return packet
-
-
 def test_human_metadata_is_supported_and_completion_is_derived(state):
     packet = complete_packet(state)
     packet.update(reviewer_type="human", review_status="complete")
@@ -270,53 +263,7 @@ def test_source_and_human_fingerprints_bind_the_exact_evidence(state):
     assert updated["agreement_rate"] == report["agreement_rate"]
 
 
-def test_secondary_ai_reference_has_its_own_denominator_and_fingerprint(state):
-    packet = complete_packet(state)
-    assistant = assistant_packet(state)
-    for name in ("answer_relevancy", "groundedness"):
-        assistant["reviews"][1]["decisions"][name]["verdict"] = "fail"
-    before = copy.deepcopy(assistant)
-    report = compare_review(state, packet, assistant_review=assistant)
-    assert report["agreements"] == 3
-    assert report["assistant_comparison"]["matching_decisions"] == 4
-    assert report["assistant_comparison"]["paired_decisions"] == 6
-    assert report["assistant_comparison"]["agreement_rate"] == 4 / 6
-    assert report["assistant_comparison"]["metrics"]["correctness"]["matching_decisions"] == 2
-    assert len(report["comparisons"]) == 6
-    assert "assistant_review_sha256" in report
-    assert "AI assistant" in comparison_markdown(report)
-    assert assistant == before
-
-
-def test_uncertain_secondary_ai_labels_are_excluded_from_agreement(state):
-    assistant = assistant_packet(state)
-    assistant["reviews"][1]["decisions"]["groundedness"]["verdict"] = "uncertain"
-    report = compare_review(state, complete_packet(state), assistant_review=assistant)
-    assert report["assistant_comparison"]["paired_decisions"] == 5
-    assert report["assistant_comparison"]["excluded_decisions"] == 1
-    assert report["comparisons"][-1]["human_matches_assistant"] is None
-
-
-@pytest.mark.parametrize("change", ["source", "rubric", "response", "duplicate", "type", "reviewer"])
-def test_secondary_ai_reference_must_match_the_recorded_pilot(state, change):
-    assistant = assistant_packet(state)
-    if change == "source":
-        assistant["source_sha256"] = "wrong"
-    elif change == "rubric":
-        assistant["rubric"]["correctness"] = "Pass everything."
-    elif change == "response":
-        assistant["reviews"][0]["actual_response"] = "Invented answer."
-    elif change == "duplicate":
-        assistant["reviews"][1] = copy.deepcopy(assistant["reviews"][0])
-    elif change == "type":
-        assistant["review_type"] = "human_generated"
-    else:
-        assistant["reviewer"] = ""
-    with pytest.raises(ValueError):
-        compare_review(state, complete_packet(state), assistant_review=assistant)
-
-
-def test_cli_reproduces_optional_reason_review_and_secondary_ai_reference(state, tmp_path):
+def test_cli_reproduces_optional_reason_review_and_preserves_inputs(state, tmp_path):
     from urllib.parse import unquote
     spec = importlib.util.spec_from_file_location("review_judge_cli", ROOT / "scripts/review_judge.py")
     cli = importlib.util.module_from_spec(spec)
@@ -332,16 +279,15 @@ def test_cli_reproduces_optional_reason_review_and_secondary_ai_reference(state,
         for decision in row["decisions"].values():
             decision["reason"] = ""
     review.write_text(json.dumps(packet), encoding="utf-8")
-    ai = tmp_path / "assistant.json"
-    ai.write_text(json.dumps(assistant_packet(state)), encoding="utf-8")
-    original = {path: path.read_bytes() for path in (source, review, ai)}
+    original = {path: path.read_bytes() for path in (source, review)}
     folder = tmp_path / "comparison"
     arguments = ["compare", "--results", str(source), "--review", str(review),
-                 "--assistant-review", str(ai), "--output-dir", str(folder)]
+                 "--output-dir", str(folder)]
     assert cli.main(arguments) == 0
     report = json.loads((folder / "comparison.json").read_text())
     assert report["status"] == "complete" and report["reason_coverage"]["written_reasons"] == 0
-    assert report["assistant_comparison"]["agreement_rate"] == 1.0
+    assert set(report["evidence_files"]) == {"source_results", "human_review"}
+    assert "assistant_comparison" not in report
     for target in report["evidence_files"].values():
         assert (folder / unquote(target)).resolve().exists()
     assert "saved%20results.json" in (folder / "comparison.md").read_text()
@@ -349,15 +295,16 @@ def test_cli_reproduces_optional_reason_review_and_secondary_ai_reference(state,
     assert all(path.read_bytes() == data for path, data in original.items())
 
 
-def test_published_manual_review_is_reproducible_from_saved_evidence():
+@pytest.mark.parametrize("suffix,written_reasons", [("", 0), ("-with-reasons", 30)])
+def test_published_manual_reviews_are_reproducible_from_saved_evidence(suffix, written_reasons):
     state = json.loads((ROOT / "results/examples/pilot-results.json").read_text(encoding="utf-8-sig"))
-    packet = json.loads((ROOT / "results/examples/pilot-human-review.json").read_text(encoding="utf-8-sig"))
-    assistant = json.loads((ROOT / "results/examples/pilot-assistant-review.json").read_text(encoding="utf-8-sig"))
-    saved = json.loads((ROOT / "results/examples/pilot-human-comparison.json").read_text(encoding="utf-8-sig"))
-    report = compare_review(state, packet, assistant_review=assistant)
+    packet = json.loads((ROOT / f"results/examples/pilot-human-review{suffix}.json").read_text(encoding="utf-8-sig"))
+    saved = json.loads((ROOT / f"results/examples/pilot-human-comparison{suffix}.json").read_text(encoding="utf-8-sig"))
+    report = compare_review(state, packet)
     assert report["status"] == "complete" and report["paired_decisions"] == 30
     assert report["agreements"] == 25
-    assert report["reason_coverage"]["missing_written_reasons"] == 30
-    assert report["assistant_comparison"]["matching_decisions"] == 30
-    for key in ("source_sha256", "human_review_sha256", "assistant_review_sha256", "comparisons"):
+    assert report["reason_coverage"]["written_reasons"] == written_reasons
+    assert report["reason_coverage"]["missing_written_reasons"] == 30 - written_reasons
+    for key in ("source_sha256", "human_review_sha256", "comparisons", "metrics", "disagreements"):
         assert saved[key] == report[key]
+    assert set(saved["evidence_files"]) == {"source_results", "human_review"}

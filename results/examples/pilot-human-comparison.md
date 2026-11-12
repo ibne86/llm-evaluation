@@ -14,45 +14,40 @@
 | correctness | 10 | 9 | 90.0% | 0 | 0 |
 | groundedness | 10 | 8 | 80.0% | 0 | 0 |
 
-## Earlier AI assistant reference
-
-Human/assistant agreement: 30/30 (100.0%). The assistant ratings retain AI authorship and are secondary to the human/local-judge comparison.
-
-
 ## Individual decisions
 
-| Case | Metric | Human | Local judge | AI assistant |
-| ---: | --- | --- | --- | --- |
-| 1 | answer_relevancy | pass | pass | pass |
-| 1 | correctness | pass | pass | pass |
-| 1 | groundedness | pass | pass | pass |
-| 2 | answer_relevancy | pass | fail | pass |
-| 2 | correctness | pass | pass | pass |
-| 2 | groundedness | pass | pass | pass |
-| 3 | answer_relevancy | pass | fail | pass |
-| 3 | correctness | pass | pass | pass |
-| 3 | groundedness | pass | pass | pass |
-| 4 | answer_relevancy | pass | pass | pass |
-| 4 | correctness | fail | fail | fail |
-| 4 | groundedness | pass | pass | pass |
-| 5 | answer_relevancy | pass | pass | pass |
-| 5 | correctness | pass | pass | pass |
-| 5 | groundedness | pass | fail | pass |
-| 6 | answer_relevancy | pass | pass | pass |
-| 6 | correctness | pass | pass | pass |
-| 6 | groundedness | pass | pass | pass |
-| 7 | answer_relevancy | pass | pass | pass |
-| 7 | correctness | fail | fail | fail |
-| 7 | groundedness | fail | fail | fail |
-| 8 | answer_relevancy | pass | pass | pass |
-| 8 | correctness | fail | fail | fail |
-| 8 | groundedness | fail | pass | fail |
-| 9 | answer_relevancy | pass | pass | pass |
-| 9 | correctness | fail | fail | fail |
-| 9 | groundedness | fail | fail | fail |
-| 10 | answer_relevancy | pass | pass | pass |
-| 10 | correctness | pass | fail | pass |
-| 10 | groundedness | pass | pass | pass |
+| Case | Metric | Human | Local judge |
+| ---: | --- | --- | --- |
+| 1 | answer_relevancy | pass | pass |
+| 1 | correctness | pass | pass |
+| 1 | groundedness | pass | pass |
+| 2 | answer_relevancy | pass | fail |
+| 2 | correctness | pass | pass |
+| 2 | groundedness | pass | pass |
+| 3 | answer_relevancy | pass | fail |
+| 3 | correctness | pass | pass |
+| 3 | groundedness | pass | pass |
+| 4 | answer_relevancy | pass | pass |
+| 4 | correctness | fail | fail |
+| 4 | groundedness | pass | pass |
+| 5 | answer_relevancy | pass | pass |
+| 5 | correctness | pass | pass |
+| 5 | groundedness | pass | fail |
+| 6 | answer_relevancy | pass | pass |
+| 6 | correctness | pass | pass |
+| 6 | groundedness | pass | pass |
+| 7 | answer_relevancy | pass | pass |
+| 7 | correctness | fail | fail |
+| 7 | groundedness | fail | fail |
+| 8 | answer_relevancy | pass | pass |
+| 8 | correctness | fail | fail |
+| 8 | groundedness | fail | pass |
+| 9 | answer_relevancy | pass | pass |
+| 9 | correctness | fail | fail |
+| 9 | groundedness | fail | fail |
+| 10 | answer_relevancy | pass | pass |
+| 10 | correctness | pass | fail |
+| 10 | groundedness | pass | pass |
 
 ## Disagreements
 
@@ -119,10 +114,8 @@ Some recorded verdicts have no human-written explanation. Missing reasons are re
 
 - [Original pilot results](pilot-results.json)
 - [Human review worksheet](pilot-human-review.json)
-- [Earlier AI assistant review](pilot-assistant-review.json)
 
 ## Evidence fingerprints
 
 - Source results: `638e93e1b6a6a9d50ba65f18a2b50d997c0bda346edd2b801c3f28fe6ed63406`.
 - Human worksheet: `2a839bf6920f26cfe511413311f75f2c90a56c4d32e13d3f39b53043e2a4a953`.
-- AI reference: `59aed4a99a0698c2bf255baa1aaa24149e82eb6fef3477fc7fb2c269cec040b1`.

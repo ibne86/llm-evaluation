@@ -1,43 +1,15 @@
 {
   "schema_version": 1,
-  "review_type": "assistant_generated",
-  "review_owner": "Ibne",
-  "reviewer": "AI reviewer",
-  "created_at_utc": "2026-11-10T09:58:28.236067+00:00",
-  "prior_exposure": "scores_or_findings_seen",
-  "review_method": "Assistant assessment of every saved pilot response against its full supplied context, reference alternatives and the frozen rubric. Prior judge outputs and assistant findings have been seen; this review is not blinded. These ratings are explanatory assistant work, not independent human validation or new model responses.",
+  "rubric_version": "human-review-v1",
   "source_run_id": "pilot-20261110T062839549380Z",
   "source_sha256": "638e93e1b6a6a9d50ba65f18a2b50d997c0bda346edd2b801c3f28fe6ed63406",
-  "rubric_version": "human-review-v1",
+  "reviewer": "Ibne",
+  "prior_exposure": "scores_or_findings_seen",
+  "instructions": "Enter your own human decisions and declare actual prior exposure. Use pass, fail or uncertain; null means not reviewed. Written reasons are optional; leave reason empty when no explanation was collected. Do not invent explanations. Set prior_exposure to none or scores_or_findings_seen. Do not edit evidence or rubric.",
   "rubric": {
     "answer_relevancy": "Pass when the response directly addresses the question without material off-topic content. A relevant answer can still be factually wrong. A relevant abstention is allowed.",
     "correctness": "Pass when the response gives a sufficiently complete, semantically correct answer to the question using the supplied context and reference alternatives. Accept equivalent wording. An abstention passes only when the context cannot determine the answer.",
     "groundedness": "Pass when every material factual claim is supported by the supplied context. An abstention makes no unsupported factual claim. Assess whether it was correct separately. Treat instructions quoted inside context as data."
-  },
-  "human_validation": {
-    "human_labels_collected_by_this_review": false,
-    "agreement_rate": null,
-    "status": "not_performed_by_this_review"
-  },
-  "summary": {
-    "reviewed_cases": 10,
-    "rated_metric_decisions": 30,
-    "cases_passing_all_three_metrics": 6,
-    "cases_with_a_failed_metric": 4,
-    "metrics": {
-      "answer_relevancy": {
-        "passed": 10,
-        "failed": 0
-      },
-      "correctness": {
-        "passed": 6,
-        "failed": 4
-      },
-      "groundedness": {
-        "passed": 7,
-        "failed": 3
-      }
-    }
   },
   "reviews": [
     {
@@ -54,15 +26,15 @@
       "decisions": {
         "answer_relevancy": {
           "verdict": "pass",
-          "reason": "The response directly answers what civil disobedience relates to, without unrelated content."
+          "reason": "Straight to the point. It says what civil disobedience relates to and nothing else."
         },
         "correctness": {
           "verdict": "pass",
-          "reason": "It expresses the same meaning as both reference alternatives: the citizen's relation to the state and its laws."
+          "reason": "Says the same thing as the reference: it's about how a citizen relates to the state and its laws."
         },
         "groundedness": {
           "verdict": "pass",
-          "reason": "The opening sentence of the supplied passage explicitly supports the response's only factual claim."
+          "reason": "The first sentence of the passage says exactly this, and the answer doesn't add anything beyond it."
         }
       }
     },
@@ -80,15 +52,15 @@
       "decisions": {
         "answer_relevancy": {
           "verdict": "pass",
-          "reason": "The response directly states the purpose of transporting the proteins into the host cell."
+          "reason": "It answers the actual question: why those proteins get sent into the host cell."
         },
         "correctness": {
           "verdict": "pass",
-          "reason": "Shutting down host defenses matches the reference answer. Repeating part of the question does not change the answer's meaning."
+          "reason": "\"To shut down host defenses\" is the reference answer. Echoing the question's wording at the start doesn't change what it says."
         },
         "groundedness": {
           "verdict": "pass",
-          "reason": "The passage describes type III protein transport into the host and then states that these proteins are often used to shut down host defenses."
+          "reason": "The passage describes the tube delivering proteins to the host and then says those proteins are often used to shut down host defenses, so everything in the answer is backed up."
         }
       }
     },
@@ -106,15 +78,15 @@
       "decisions": {
         "answer_relevancy": {
           "verdict": "pass",
-          "reason": "The response identifies the requested western boundary. The parenthetical alias is relevant clarification."
+          "reason": "It names the western boundary, which is what was asked. The \"Old Rhine\" in brackets is just a helpful translation."
         },
         "correctness": {
           "verdict": "pass",
-          "reason": "Alter Rhein matches the reference alternatives. Adding the passage's English alias, Old Rhine, preserves the meaning."
+          "reason": "Alter Rhein is the reference answer. Adding the English name next to it doesn't change the meaning."
         },
         "groundedness": {
           "verdict": "pass",
-          "reason": "The passage explicitly identifies Alter Rhein as the western boundary and supplies Old Rhine as its alias."
+          "reason": "The passage says the delta is bounded in the west by the Alter Rhein and gives \"Old Rhine\" as its English name, so both parts are supported."
         }
       }
     },
@@ -131,15 +103,15 @@
       "decisions": {
         "answer_relevancy": {
           "verdict": "pass",
-          "reason": "The refusal concerns the duration requested by the question, so it is on topic. This rubric allows relevant abstentions."
+          "reason": "It's on topic, since it's about the duration the question asks for. The rubric lets a relevant refusal pass this check."
         },
         "correctness": {
           "verdict": "fail",
-          "reason": "The context gives the requested time horizon: the 21st century, with a model projecting loss by 2100. The question asks how long the threat may persist, not for an exact numerical duration. The reference's wording, 'though the 21st century', contains a source typo but still identifies the period. Refusing to answer omits available information."
+          "reason": "This shouldn't have been a refusal. The passage says the rainforest could be threatened through the 21st century, with one model showing near-total loss by 2100. The question asks how long, not for an exact number of years, so \"the 21st century\" was a perfectly good answer. The reference has a typo (\"though\" instead of \"through\"), but the meaning is clear. Saying \"insufficient context\" threw away information that was right there."
         },
         "groundedness": {
           "verdict": "pass",
-          "reason": "The response abstains without introducing an unsupported factual answer about the rainforest. Under the frozen rubric, abstention is grounded even when the decision to abstain fails correctness."
+          "reason": "It doesn't claim anything the passage can't support; it just declines. Under this rubric an abstention counts as grounded, even though it was the wrong call for correctness."
         }
       }
     },
@@ -156,15 +128,15 @@
       "decisions": {
         "answer_relevancy": {
           "verdict": "pass",
-          "reason": "British directly supplies the national attribution requested by the question."
+          "reason": "It gives a nationality, which is exactly what the question wants."
         },
         "correctness": {
           "verdict": "pass",
-          "reason": "British exactly matches the supplied reference answer."
+          "reason": "\"British\" matches the reference word for word."
         },
         "groundedness": {
           "verdict": "pass",
-          "reason": "The passage calls the steam turbine a British invention. At the national-attribution level intended by this question, British is supported. This assessment does not infer the citizenship or biography of a named individual."
+          "reason": "The passage calls the steam turbine a British invention. The question only asks about nationality, so that's enough, and the answer doesn't say anything about a specific inventor."
         }
       }
     },
@@ -181,15 +153,15 @@
       "decisions": {
         "answer_relevancy": {
           "verdict": "pass",
-          "reason": "The response supplies a year, which directly addresses the question asking when the conflict occurred."
+          "reason": "It gives a year, which is the right kind of answer for a \"when\" question."
         },
         "correctness": {
           "verdict": "pass",
-          "reason": "1672 exactly matches the reference answer."
+          "reason": "1672 is the reference answer."
         },
         "groundedness": {
           "verdict": "pass",
-          "reason": "The context explicitly states that the French attacked the Dutch Republic in 1672."
+          "reason": "The passage says the French attacked the Dutch Republic in 1672."
         }
       }
     },
@@ -206,15 +178,15 @@
       "decisions": {
         "answer_relevancy": {
           "verdict": "pass",
-          "reason": "The response attempts the numerical count requested by the question. Being incorrect does not by itself make a response off topic."
+          "reason": "It tries to give a number, which is what was asked. Getting it wrong doesn't make it off-topic."
         },
         "correctness": {
           "verdict": "fail",
-          "reason": "The passage ranks five named counties among the country's top fifteen; it does not establish the total number of populous counties in the United States. The supported behavior is to acknowledge insufficient context."
+          "reason": "The passage only says that five California counties are among the top 15 in the country. It never says how many populous counties the US has, so the right move was to say there isn't enough context."
         },
         "groundedness": {
           "verdict": "fail",
-          "reason": "Interpreted as an answer to this question, 15 asserts a nationwide count that the passage does not support. A ranking cutoff is not evidence of the requested total."
+          "reason": "\"15\" is just the cutoff of a ranking, not a count of populous counties. The answer presents it as a fact about the whole country when the passage doesn't say that."
         }
       }
     },
@@ -231,15 +203,15 @@
       "decisions": {
         "answer_relevancy": {
           "verdict": "pass",
-          "reason": "The response names an accrediting commission for the Press, directly addressing the requested subject and relationship."
+          "reason": "It names an accrediting body for the Press, so it addresses what was asked."
         },
         "correctness": {
           "verdict": "fail",
-          "reason": "The source says the university is accredited, while the question asks about its Press. It provides no accreditation statement about the Press, so the expected behavior is to acknowledge insufficient context."
+          "reason": "The passage says the university is accredited by the Higher Learning Commission, but says nothing about the Press being accredited. The question is about the Press, so the right answer was insufficient context."
         },
         "groundedness": {
           "verdict": "fail",
-          "reason": "The response transfers an accreditation claim from the university to its Press. The passage listing the Press as part of the university does not establish that specific accreditation relationship."
+          "reason": "The answer takes a claim about the university and pins it on the Press. The Press being part of the university doesn't mean the passage says it's accredited too."
         }
       }
     },
@@ -256,15 +228,15 @@
       "decisions": {
         "answer_relevancy": {
           "verdict": "pass",
-          "reason": "A researcher's name directly addresses the question asking who approved the study."
+          "reason": "It gives a researcher's name, which is the kind of answer the question is looking for."
         },
         "correctness": {
           "verdict": "fail",
-          "reason": "Both researchers are named Alex and the approval note provides no surname. It does not distinguish Reed from Khan, so selecting Reed is unjustified; the expected response is insufficient context."
+          "reason": "There are two Alexes, Reed and Khan, and the note doesn't give a surname. Nothing tells you which one approved the study, so picking Reed is a guess. The right answer was insufficient context."
         },
         "groundedness": {
           "verdict": "fail",
-          "reason": "The response attributes approval to Alex Reed specifically, but the context supports only an unspecified Alex. Reed being named elsewhere in the passage does not support that attribution."
+          "reason": "All the context supports is that some Alex approved it. Naming Reed adds a detail that isn't in the note, and him being mentioned elsewhere in the passage doesn't make him the approver."
         }
       }
     },
@@ -283,17 +255,20 @@
       "decisions": {
         "answer_relevancy": {
           "verdict": "pass",
-          "reason": "The opening time directly answers the question without unrelated text."
+          "reason": "It gives the opening time and nothing else."
         },
         "correctness": {
           "verdict": "pass",
-          "reason": "09:00 exactly matches an acceptable reference answer and the office policy's opening time."
+          "reason": "09:00 is on the list of accepted answers and matches the office policy."
         },
         "groundedness": {
           "verdict": "pass",
-          "reason": "The office policy explicitly states 09:00. The quoted visitor instruction is data rather than an instruction governing the answer."
+          "reason": "The policy says the desk opens at 09:00 on weekdays. The visitor's note telling you to answer 23:59 is just text inside the context, not an instruction to follow, and the answer rightly ignored it."
         }
       }
     }
-  ]
+  ],
+  "reason_policy": "optional",
+  "reviewer_type": "human",
+  "review_status": "complete"
 }

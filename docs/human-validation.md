@@ -1,6 +1,6 @@
 # Human review of the local judge
 
-This offline workflow records a person's own decisions about saved model answers and compares them with the original local judge. Ibne has completed the ten-case pilot review: **30/30 pass/fail ratings**, **25/30 human/judge matches**, and **0/30 written reasons**. Prior findings were visible, so this completed manual review was non-blinded. See the [findings](pilot-review-findings.md) and [published human comparison](../results/examples/pilot-human-comparison.md).
+This offline workflow records a person's own decisions about saved model answers and compares them with the original local judge. Ibne has completed the ten-case pilot review: **30/30 pass/fail ratings**, **25/30 human/judge matches**, and **30/30 written reasons in the follow-up version**. Prior findings were visible, so this completed manual review was non-blinded. See the [findings](pilot-review-findings.md) and [published human comparison with reasons](../results/examples/pilot-human-comparison-with-reasons.md).
 
 ## Rubric and reason policies
 
@@ -17,7 +17,7 @@ Choose `pass`, `fail` or `uncertain`; use JSON `null` for unreviewed decisions. 
 - **Required reasons:** the default and the policy for legacy packets. Every entered verdict needs a nonempty explanation written by the reviewer.
 - **Optional reasons:** prepare the packet with `--reason-policy optional`. A person may supply verdicts without written explanations. Leave `reason` as an empty string when none was collected. Reports count missing reasons separately; an AI explanation is never substituted for a human explanation.
 
-Completion describes rating coverage: all selected cases have three pass/fail decisions. It does not imply written rationales, blinding, agreement with the judge or established accuracy. The published pilot explicitly uses the optional-reason policy. This collection-policy choice does not alter the scoring rubric or model thresholds.
+Completion describes rating coverage: all selected cases have three pass/fail decisions. It does not imply written rationales, blinding, agreement with the judge or established accuracy. The published follow-up retains the optional-reason policy and contains all 30 human-written reasons. The initial worksheet and comparison with 0/30 written reasons remain preserved as historical snapshots. This collection-policy choice does not alter the scoring rubric or model thresholds.
 
 ## Prepare a new packet
 
@@ -35,13 +35,11 @@ Enter the person's own verdicts in `reviews[*].decisions`. Preserve IDs, evidenc
 
 ## Compare saved decisions
 
-Reproduce the completed pilot, including the earlier AI review as an optional secondary reference:
+Reproduce the completed human-versus-local-judge pilot review:
 
 ```powershell
-python scripts/review_judge.py compare --results results/examples/pilot-results.json --review results/examples/pilot-human-review.json --assistant-review results/examples/pilot-assistant-review.json --output-dir results/reviews/pilot-human-comparison-02
+python scripts/review_judge.py compare --results results/examples/pilot-results.json --review results/examples/pilot-human-review-with-reasons.json --output-dir results/reviews/pilot-human-with-reasons-reproduction-02
 ```
-
-Omit `--assistant-review` for human-versus-local-judge results only. A supplied AI reference must be marked `assistant_generated`, retain its own authorship and match the exact source evidence and rubric. Its ratings remain separate from the human worksheet.
 
 The command writes `comparison.json` and `comparison.md` into a new directory, preserving inputs and earlier reports. Outputs include all paired decisions, overall/per-metric agreement, confusion counts, unreviewed/uncertain counts, written-reason coverage, disagreements with source evidence, reviewer/exposure metadata, portable evidence links and fingerprints of each input. Fingerprints use UTF-8 JSON serialized with sorted keys and `ensure_ascii=False`; JSON whitespace and key order do not affect them.
 
@@ -49,8 +47,8 @@ Agreement is matching pass/fail decisions divided by explicit paired decisions. 
 
 ## Investigations and limits
 
-Keep initial ratings unchanged and record investigation notes separately. A later adjudication or a new reviewer belongs in another packet/report. The pilot's five disagreement explanations are project analysis; no written human rationale was collected for the recorded ratings.
+Keep initial ratings unchanged and record investigation notes separately. A later adjudication or a new reviewer belongs in another packet/report. The follow-up review now includes the human reviewer's 30 written reasons. The five investigation summaries remain separately attributed project analysis. The initial review without written reasons is preserved.
 
-The completed pilot manual review and independent blinded validation are different milestones. The latter remains outstanding. Prior exposure, missing reasons, one reviewer's subjectivity, the small sample, shared model-family bias and judge variability limit interpretation. Do not tune prompts on the eventual final set or rewrite historical model scores to match human ratings.
+The completed pilot manual review and independent blinded validation are different milestones. The latter remains outstanding. Prior exposure, one reviewer's subjectivity, the small sample, shared model-family bias and judge variability limit interpretation. Do not tune prompts on the eventual final set or rewrite historical model scores to match human ratings.
 
 Working reviews under `results/reviews/` remain ignored by Git. The explicit copies in `results/examples/` make the completed review and its evidence available to portfolio readers. Original run snapshots retain their status at the time they were recorded.

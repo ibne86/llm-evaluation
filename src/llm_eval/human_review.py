@@ -184,49 +184,9 @@ def _validate_rows(state, rows, *, require_reasons):
     return by_id, has_decisions
 
 
-def _validate_assistant_review(state, packet):
-    if not isinstance(packet, dict) or packet.get("review_type") != "assistant_generated":
-        raise ValueError("Secondary reference must be an assistant_generated review.")
-    expected = create_review(state)
-    for key in ("source_run_id", "source_sha256", "rubric_version", "rubric"):
-        if packet.get(key) != expected[key]:
-            raise ValueError("Assistant reference source or rubric differs from the human review.")
-    if not isinstance(packet.get("reviewer"), str) or not packet["reviewer"].strip():
-        raise ValueError("Assistant reference must identify its AI reviewer.")
-    if packet.get("reviewer_type", "ai_assistant") not in ("ai", "ai_assistant"):
-        raise ValueError("Secondary reference reviewer_type must identify AI authorship.")
-    return _validate_rows(state, packet.get("reviews"), require_reasons=True)[0]
-
-
-def _assistant_agreement(reviews, assistant):
-    metrics = {}
-    for name in METRICS:
-        paired = matching = 0
-        for case_id, row in reviews.items():
-            human = row["decisions"][name]["verdict"]
-            other = assistant[case_id]["decisions"][name]["verdict"]
-            if human in ("pass", "fail") and other in ("pass", "fail"):
-                paired += 1
-                matching += human == other
-        metrics[name] = {
-            "paired_decisions": paired, "matching_decisions": matching,
-            "agreement_rate": matching / paired if paired else None,
-            "excluded_decisions": len(reviews) - paired,
-        }
-    paired = sum(metric["paired_decisions"] for metric in metrics.values())
-    matching = sum(metric["matching_decisions"] for metric in metrics.values())
-    return {
-        "paired_decisions": paired, "matching_decisions": matching,
-        "agreement_rate": matching / paired if paired else None,
-        "excluded_decisions": len(reviews) * len(METRICS) - paired,
-        "metrics": metrics,
-    }
-
-
-def compare_review(state, packet, *, assistant_review=None):
+def compare_review(state, packet):
     """Pair only explicit pass/fail labels; missing/uncertain labels never count as failures."""
     reviews = _validate_review(state, packet)
-    assistant = _validate_assistant_review(state, assistant_review) if assistant_review is not None else None
     totals, disagreements = {}, []
     for name in METRICS:
         counts = Counter()
@@ -284,16 +244,6 @@ def compare_review(state, packet, *, assistant_review=None):
                     human["verdict"] == judge_verdict if human["verdict"] in ("pass", "fail") else None
                 ),
             }
-            if assistant is not None:
-                other = assistant[case_id]["decisions"][name]
-                comparison.update({
-                    "assistant_verdict": other["verdict"], "assistant_reason": other["reason"],
-                    "human_matches_assistant": (
-                        human["verdict"] == other["verdict"]
-                        if human["verdict"] in ("pass", "fail") and other["verdict"] in ("pass", "fail")
-                        else None
-                    ),
-                })
             comparisons.append(comparison)
     report = {
         "schema_version": 1, "evaluation_type": "human_vs_local_judge",
@@ -322,10 +272,6 @@ def compare_review(state, packet, *, assistant_review=None):
             "record disagreement investigations separately."
         ),
     }
-    if assistant is not None:
-        report["assistant_reviewer"] = assistant_review["reviewer"]
-        report["assistant_review_sha256"] = _fingerprint(assistant_review)
-        report["assistant_comparison"] = _assistant_agreement(reviews, assistant)
     return report
 
 
@@ -351,27 +297,12 @@ def comparison_markdown(report):
     for name, metric in report["metrics"].items():
         lines.append(f"| {name} | {metric['paired']} | {metric['agreements']} | "
                      f"{percentage(metric['agreement_rate'])} | {metric['unreviewed']} | {metric['uncertain']} |")
-    secondary = report.get("assistant_comparison")
-    if secondary is not None:
-        lines.extend([
-            "", "## Earlier AI assistant reference", "",
-            f"Human/assistant agreement: {secondary['matching_decisions']}/"
-            f"{secondary['paired_decisions']} ({percentage(secondary['agreement_rate'])}). "
-            "The assistant ratings retain AI authorship and are secondary to the human/local-judge comparison.",
-            "",
-        ])
     lines.extend(["", "## Individual decisions", ""])
-    if secondary is not None:
-        lines.extend(["| Case | Metric | Human | Local judge | AI assistant |",
-                      "| ---: | --- | --- | --- | --- |"])
-    else:
-        lines.extend(["| Case | Metric | Human | Local judge |",
-                      "| ---: | --- | --- | --- |"])
+    lines.extend(["| Case | Metric | Human | Local judge |",
+                  "| ---: | --- | --- | --- |"])
     for row in report["comparisons"]:
         cells = [str(row["case_number"]), row["metric"], row["human_verdict"] or "not reviewed",
                  row["judge_verdict"]]
-        if secondary is not None:
-            cells.append(row["assistant_verdict"] or "not reviewed")
         lines.append("| " + " | ".join(cells) + " |")
     lines.extend(["", "## Disagreements", ""])
     if not report["disagreements"]:
@@ -395,15 +326,12 @@ def comparison_markdown(report):
                       "are reported separately from rating coverage; no AI rationale is attributed to the human.", ""])
     if report.get("evidence_files"):
         lines.extend(["## Evidence", ""])
-        labels = {"source_results": "Original pilot results", "human_review": "Human review worksheet",
-                  "assistant_review": "Earlier AI assistant review"}
+        labels = {"source_results": "Original pilot results", "human_review": "Human review worksheet"}
         for key, target in report["evidence_files"].items():
             lines.append(f"- [{labels[key]}]({target})")
         lines.append("")
     lines.extend(["## Evidence fingerprints", "",
                   f"- Source results: `{report['source_sha256']}`.",
                   f"- Human worksheet: `{report['human_review_sha256']}`."])
-    if "assistant_review_sha256" in report:
-        lines.append(f"- AI reference: `{report['assistant_review_sha256']}`.")
     lines.append("")
     return "\n".join(lines)

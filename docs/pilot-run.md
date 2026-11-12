@@ -47,7 +47,7 @@ Exit codes: 0 means all quality checks passed; 1 means execution completed with 
 
 Scores outside 0–1, malformed/truncated/empty responses, missing explanations, timeouts and context-budget violations are execution errors. They never become passing scores. Whole-system RAM snapshots are not peak or model-only measurements.
 
-The original judge produced a contradictory explanation in a setup control. All pilot explanations are therefore review material, not established facts. The subsequent [manual review](pilot-review-findings.md) now records all 30 pilot verdicts and 25/30 human/local-judge matches. It was non-blinded, written reasons were not collected, and independent blinded validation remains outstanding. Historical run snapshots keep their original status.
+The original judge produced a contradictory explanation in a setup control. All pilot explanations are therefore review material, not established facts. The subsequent [manual review](pilot-review-findings.md) now records all 30 pilot verdicts and 25/30 human/local-judge matches. It was non-blinded; a separate follow-up now contains 30/30 written human reasons. Independent blinded validation remains outstanding, and the earlier review without reasons is preserved. Historical run snapshots keep their original status.
 
 ## Current milestone boundary
 

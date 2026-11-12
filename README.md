@@ -4,7 +4,7 @@ A Python QA project that evaluates an existing local language model with pytest,
 
 ## Current status
 
-The ten-case development pilot, all 30 metric evaluations and the first nine-trial consistency experiment are complete. Offline harness tests: **103 passed**. Ibne completed a manual pilot review with **30/30 verdicts**: **25/30 match the local judge (83.3%)** and **30/30 match the earlier AI assistant review**. The manual review was non-blinded, and written reasons were not collected. Independent blinded validation and the separate final 50-case evaluation remain outstanding.
+The ten-case development pilot, all 30 metric evaluations and the first nine-trial consistency experiment are complete. Offline harness tests: **96 passed**. Ibne completed a manual pilot review with **30/30 verdicts**: **25/30 match the local judge (83.3%)**. Ibne has now supplied written reasons for all 30 decisions in a separate follow-up copy. Prior AI findings were visible, so the review remains non-blinded. Independent blinded validation and the separate final 50-case evaluation remain outstanding.
 
 The original models remain unchanged:
 
@@ -144,25 +144,25 @@ See the [recorded pilot summary](results/examples/pilot-summary.md) and [full ex
 
 ## Pilot review findings
 
-Ibne manually reviewed all ten saved pilot answers, supplying **30 pass/fail decisions**. Human/local-judge agreement is **25/30 (83.3%)**: 8/10 for relevancy, 9/10 for correctness and 8/10 for groundedness. Five disagreements were investigated. Human decisions also match the earlier AI assistant ratings on 30/30 metrics.
+Ibne manually reviewed all ten saved pilot answers, supplying **30 pass/fail decisions**. Human/local-judge agreement is **25/30 (83.3%)**: 8/10 for relevancy, 9/10 for correctness and 8/10 for groundedness. Five disagreements were investigated.
 
-Prior judge outputs and AI findings were visible, so this review was non-blinded. Written human reasons were not collected. These limits are recorded separately from rating coverage, and agreement is not an accuracy estimate. The earlier AI analysis retains its AI attribution.
+Prior judge outputs and AI findings were visible, so this review was non-blinded. The current follow-up review contains 30/30 written human reasons. The initial version without reasons is retained as a historical snapshot. Prior exposure remains a limitation, and agreement is not an accuracy estimate.
 
-Read the [findings guide](docs/pilot-review-findings.md), [human comparison](results/examples/pilot-human-comparison.md), [comparison JSON](results/examples/pilot-human-comparison.json), and [completed human worksheet](results/examples/pilot-human-review.json). The [earlier assistant review](results/examples/pilot-assistant-review.md) and [AI-only comparison](results/examples/pilot-assistant-comparison.md) remain available as supporting evidence.
+Read the [findings guide](docs/pilot-review-findings.md), [human comparison with reasons](results/examples/pilot-human-comparison-with-reasons.md), [comparison JSON](results/examples/pilot-human-comparison-with-reasons.json), and [human worksheet with reasons](results/examples/pilot-human-review-with-reasons.json). The [initial human comparison without reasons](results/examples/pilot-human-comparison.md) remains available separately.
 
 ## Human validation and limitations
 
-The ten-case manual review is complete. Independent blinded validation remains outstanding. The [human review guide](docs/human-validation.md) documents both required and optional written-reason policies. The completed pilot uses optional reasons, with 30 rated decisions and zero written rationales. Reviewer metadata and actual prior exposure are preserved.
+The ten-case manual review is complete. Independent blinded validation remains outstanding. The [human review guide](docs/human-validation.md) documents both required and optional written-reason policies. The follow-up worksheet retains the optional-reason collection policy and now contains 30 rated decisions with 30 human-written rationales. The original version without reasons is preserved. Reviewer metadata and actual prior exposure are preserved.
 
 Reproduce the published comparison offline into a fresh directory:
 
 ```powershell
-python scripts/review_judge.py compare --results results/examples/pilot-results.json --review results/examples/pilot-human-review.json --assistant-review results/examples/pilot-assistant-review.json --output-dir results/reviews/pilot-human-reproduction-01
+python scripts/review_judge.py compare --results results/examples/pilot-results.json --review results/examples/pilot-human-review-with-reasons.json --output-dir results/reviews/pilot-human-with-reasons-reproduction-01
 ```
 
-The command validates the evidence, recomputes human/judge agreement and the optional secondary AI comparison, and records fingerprints for all three inputs. Missing/uncertain ratings are excluded from agreement, with coverage shown. Existing inputs and reports are preserved; no model inference is needed.
+The command validates the evidence, recomputes human/judge agreement and records fingerprints for the source results and human worksheet. Missing/uncertain ratings are excluded from agreement, with coverage shown. Existing inputs and reports are preserved; no model inference is needed.
 
-Original run snapshots retain their earlier review status. Limitations include prior exposure to AI findings, missing human rationales, one reviewer's subjectivity, the small sample, related metrics, shared model-family bias and judge variability. Correct abstention, factual correctness and groundedness remain separate criteria. Neither agreement nor successful integration establishes general model or judge accuracy.
+Original run snapshots retain their earlier review status. Limitations include prior exposure to AI findings, one reviewer's subjectivity, the small sample, related metrics, shared model-family bias and judge variability. Correct abstention, factual correctness and groundedness remain separate criteria. Neither agreement nor successful integration establishes general model or judge accuracy.
 
 ## Remaining milestones
 
