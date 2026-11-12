@@ -1,6 +1,31 @@
 # Human review of consistency responses
 
-This workflow reviews saved responses from the repeated-response experiment. The included run has **three questions, three repeats each, nine responses and 27 metric decisions**. Preparing the worksheet runs offline and leaves every human verdict unfilled. Model outputs, scores and the ten-case pilot review remain unchanged.
+Ibne completed the human review of the saved consistency experiment: **three questions, nine responses, 27 pass/fail judgments and 27 written reasons**. The human reviewer and local judge agree on **24/27 decisions (88.9%)**, with three disagreements. Prior findings had been seen, so the review was non-blinded. Original model outputs, scores and the ten-case pilot review remain unchanged.
+
+## Published review results
+
+| Evidence | Contents |
+| --- | --- |
+| [Completed human worksheet](../results/examples/consistency-human-review.json) | All nine trial rows, 27 human judgments and the reviewer's written reasons |
+| [Comparison JSON](../results/examples/consistency-human-comparison.json) | Paired decisions, coverage, original scores/reasons, disagreements and input fingerprints |
+| [Readable comparison](../results/examples/consistency-human-comparison.md) | Trial-specific decisions and human-versus-local-judge findings |
+
+| Metric | Matching decisions | Paired decisions | Agreement |
+| --- | ---: | ---: | ---: |
+| Relevancy | 7 | 9 | 77.8% |
+| Correctness | 8 | 9 | 88.9% |
+| Groundedness | 9 | 9 | 100.0% |
+| Overall | 24 | 27 | 88.9% |
+
+County-answer relevancy differs on repeats 2 and 3: the human treats a wrong numerical answer as on topic, while the judge rejects it because the context cannot supply the count. Opening-time correctness differs on repeat 1: the saved answer is `09:00`, but the failing explanation refers to `09:0:0`. All original scores and explanations are preserved, and the human reasons remain exactly as submitted.
+
+The human review passes all three criteria on six trials and flags the three county-answer trials. This differs from the original automated five passes and four flags. Rating completeness, quality outcomes and agreement are separate quantities. The three repeated questions and their metrics are correlated; these results are not independent accuracy estimates or a replacement for the separate ten-case pilot report.
+
+Reproduce the completed comparison into a fresh directory:
+
+```powershell
+python scripts/review_judge.py compare --results results/examples/consistency-results.json --review results/examples/consistency-human-review.json --output-dir results/reviews/consistency-human-reproduction-01
+```
 
 ## Identify each saved response
 
@@ -22,7 +47,7 @@ The command refuses to overwrite an existing file. If the initial worksheet alre
 
 ## Enter your own review
 
-Open `results/reviews/consistency-human-review.json` in the editor. Set `reviewer` and declare actual `prior_exposure`: `none` or `scores_or_findings_seen`. Ibne has already seen experiment findings; the initial local worksheet records `Ibne`, `human`, and `scores_or_findings_seen`, with all 27 verdicts still `null`.
+Open `results/reviews/consistency-human-review.json` in the editor. Set `reviewer` and declare actual `prior_exposure`: `none` or `scores_or_findings_seen`. Ibne completed the published review with `reviewer: Ibne`, `reviewer_type: human` and `prior_exposure: scores_or_findings_seen`. Newly prepared worksheets start with all verdicts `null`; keep the completed review unchanged and choose another filename for a new round.
 
 Read each row's question, full context, expected answers and actual response. Enter `pass`, `fail` or `uncertain` for relevancy, correctness and groundedness, with your own written reason for each entered judgment. Use the [same rubric as the pilot](human-validation.md). Leave `null` for anything not yet reviewed.
 
@@ -60,6 +85,6 @@ Original machine scores and raw run summaries remain frozen, including their rev
 
 ## Publication and limits
 
-Working reviews under `results/reviews/` are ignored by Git. Once the human ratings are entered and checked, deliberately prepare publishable examples and update documentation. A worksheet or a synthetic unit test is not completed human validation.
+Working reviews under `results/reviews/` are ignored by Git. The completed review and comparison above are deliberate publishable copies in `results/examples/`; the original local worksheet and reports are preserved. For a future round, publish examples only after the human has entered and checked the judgments. Preparing a worksheet or running synthetic tests alone does not complete human validation.
 
 The original [consistency result](../results/examples/consistency-results.json) and [experiment guide](response-consistency.md) remain available. The repeated observations and metrics are correlated, the sample is small, and the local judge remains fallible. Agreement is not model accuracy. An independent blinded assessment would provide additional validation; it is separate from implementing this workflow.

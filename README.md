@@ -4,7 +4,14 @@ A Python QA project that evaluates an existing local language model with pytest,
 
 ## Current status
 
-The ten-case development pilot, all 30 metric evaluations and the first nine-trial consistency experiment are complete. Offline harness tests: **127 passed**. Ibne completed a manual pilot review with **30/30 verdicts**: **25/30 match the local judge (83.3%)**. Ibne has now supplied written reasons for all 30 decisions in a separate follow-up copy. Prior AI findings were visible, so the review remains non-blinded. Human-review tooling for the nine consistency responses is implemented; its 27 manual ratings remain pending. Independent blinded validation has not been performed, and the separate final 50-case evaluation remains outstanding.
+The ten-case pilot and nine-response consistency experiment are complete. Offline harness tests: **127 passed**. Ibne completed both manual reviews, including a written reason for every judgment:
+
+| Manual review | Questions | Responses | Judgments with reasons | Human/judge matches |
+| --- | ---: | ---: | ---: | ---: |
+| Pilot | 10 | 10 | 30/30 | 25/30 (83.3%) |
+| Consistency | 3 | 9 | 27/27 | 24/27 (88.9%) |
+
+Prior AI findings were visible, so both reviews were non-blinded. These agreement rates are separate measurements, not accuracy estimates. Independent blinded validation has not been performed, and the separate final 50-case evaluation remains outstanding.
 
 The original models remain unchanged:
 
@@ -103,23 +110,23 @@ After reviewing the plan, run `python scripts/run_consistency.py`. The default e
 
 The first measured consistency run produced identical response text across all three repeats for every selected case:
 
-| Case | Exact text stable | Automated quality passes |
-| --- | --- | ---: |
-| Civil disobedience | Yes | 3/3 |
-| Unanswerable county count | Yes | 0/3 |
-| Embedded instruction / opening time | Yes | 2/3 |
+| Case | Exact text stable | Automated quality passes | Manual passes on all three criteria |
+| --- | --- | ---: | ---: |
+| Civil disobedience | Yes | 3/3 | 3/3 |
+| Unanswerable county count | Yes | 0/3 | 0/3 |
+| Embedded instruction / opening time | Yes | 2/3 | 3/3 |
 
 The county answer remained the unsupported `15`. The opening-time answer remained the exact reference `09:00`, while the judge's correctness scores changed from 0.0 to 1.0 and 1.0 for identical grading prompts. This demonstrates why text stability and judge-based quality outcomes must be reported separately. The five automated passes and four flags are not an accuracy estimate. Both models unloaded successfully; elapsed time was approximately 7 minutes 40 seconds.
 
-See the [recorded consistency summary](results/examples/consistency-summary.md), [full results](results/examples/consistency-results.json), and [assistant audit notes](results/examples/consistency-review-notes.json). The audit verified all nine answer-prompt hashes and all 18 G-Eval prompt hashes/raw score normalizations. These nine consistency trials have not received separate human ratings; the completed manual review below covers the original ten-case pilot.
+See the [recorded consistency summary](results/examples/consistency-summary.md), [full results](results/examples/consistency-results.json), and [assistant audit notes](results/examples/consistency-review-notes.json). The audit verified all nine answer-prompt hashes and all 18 G-Eval prompt hashes/raw score normalizations. The completed [consistency human review](results/examples/consistency-human-comparison.md) covers all nine responses with 27 judgments and written reasons. Human/judge agreement is 24/27 (88.9%): relevancy 7/9, correctness 8/9 and groundedness 9/9. The human review passes all three criteria on six trials and flags three; original automated scores remain unchanged.
 
-The [consistency human-review guide](docs/consistency-human-review.md) explains how to review each saved repeat separately. Prepare an unlabeled worksheet offline:
+Read the [consistency human-review guide](docs/consistency-human-review.md), [completed worksheet](results/examples/consistency-human-review.json), and [comparison JSON](results/examples/consistency-human-comparison.json). Reproduce the published comparison offline into a fresh directory:
 
 ```powershell
-python scripts/review_judge.py prepare --results results/examples/consistency-results.json --output results/reviews/consistency-human-review.json
+python scripts/review_judge.py compare --results results/examples/consistency-results.json --review results/examples/consistency-human-review.json --output-dir results/reviews/consistency-human-reproduction-01
 ```
 
-Fill the 27 judgments and reasons yourself, then use the comparison command in the guide. The worksheet preserves case IDs and repeat numbers; identical answers remain separate review items. The original ten-case review and model results are unchanged.
+The three disagreements concern county-answer relevancy on repeats 2 and 3, and opening-time correctness on repeat 1. The latter judge explanation invents `09:0:0`, while the saved response is the exact reference `09:00`. The pilot and consistency reviews use overlapping questions and correlated observations, so their rates are reported separately.
 
 ## Evaluation methods
 
@@ -174,6 +181,6 @@ Original run snapshots retain their earlier review status. Limitations include p
 
 ## Remaining milestones
 
-Next: enter and compare the 27 human judgments for the saved consistency trials, record the pilot calibration decision, freeze final evaluation settings, prepare the separate 50-case set and complete the final analysis. The completed non-blinded manual review is documented above; independent blinded validation remains outstanding. Human comparison examples and code are prepared on this branch for inspection. Git commits, pushes, merges and branch cleanup remain manual.
+Next: record the judge-calibration decision, freeze final evaluation settings, prepare the separate 50-case set and complete the final analysis. Both manual reviews and their written reasons are complete. The completed non-blinded manual review is documented above; independent blinded validation remains outstanding. Completed consistency-review evidence and documentation are prepared on this branch for publication. Git commits, pushes, merges and branch cleanup remain manual.
 
 Progress is tracked in [PROGRESS.md](docs/PROGRESS.md) and the [project plan](docs/PROJECT_PLAN.md). A software license has not yet been selected. Dataset material is CC BY-SA 4.0; model licenses are separate, and model files are not included in the repository.

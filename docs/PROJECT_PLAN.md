@@ -1,6 +1,6 @@
 # Local LLM Evaluation — project plan and progress
 
-Prepared: 10 November 2026. Updated: 12 November 2026. Current status: the ten-case pilot, repeated-response experiment and manual pilot review are complete. Ibne supplied 30/30 verdicts, with 25/30 matching the original local judge. The manual review was non-blinded; a separate follow-up now includes all 30 written human rationales while preserving the initial version without reasons. Independent blinded validation and the final 50-case evaluation remain outstanding. The original model pair is unchanged. Human-review tooling for nine consistency trials is implemented; 27 user ratings remain pending. Earlier setup/checkpoint sections below are historical records.
+Prepared: 10 November 2026. Updated: 12 November 2026. Current status: the ten-case pilot, repeated-response experiment and manual pilot review are complete. Ibne supplied 30/30 verdicts, with 25/30 matching the original local judge. The manual review was non-blinded; a separate follow-up now includes all 30 written human rationales while preserving the initial version without reasons. Independent blinded validation and the final 50-case evaluation remain outstanding. The original model pair is unchanged. The consistency review is also complete: nine responses, 27 judgments with written reasons, and 24/27 local-judge matches (88.9%). Its result is separate from the overlapping ten-case pilot review. Earlier setup/checkpoint sections below are historical records.
 
 ## Objective and boundaries
 
@@ -162,11 +162,11 @@ This is the intended final structure; create files only when their implementatio
 ### Milestone 2 — completion, 9–16 additional hours
 
 7. Freeze configuration/rubrics and prepare the separate 50-case final dataset with the required composition and custom behaviors. **1.5–2.5 hours.** Pending.
-8. Add remaining metrics, consistency runs and automated regression checks. Consistency execution and offline human-review tooling are implemented; the 27 consistency ratings and remaining real-model regression coverage are pending.
+8. Add remaining metrics, consistency runs and automated regression checks. Consistency execution, human-review tooling and all 27 consistency judgments/reasons are complete. Remaining real-model regression coverage is pending.
 9. Prepare the human review sheet and analyze agreement/disagreements. Completed for all ten pilot cases: 30 non-blinded human verdicts, 25/30 local-judge matches, and 30 written human rationales in a follow-up version. The initial version without reasons is preserved. Independent blinded review remains outstanding.
 10. Complete reporting, failure analysis and reproducible example artifacts. **1.5–2.5 hours.** Pending.
 11. Finish README, setup/reproduction instructions, dataset documentation and limitations. **1.5–3 hours.** Pending.
-12. Review publication contents and publish only when approved. Baseline, CI, consistency and ten-case manual review features are published. Publication of the new consistency-review tooling remains pending; Git operations are manual.
+12. Review publication contents and publish only when approved. Baseline, CI, consistency and ten-case manual review features are published. Consistency-review tooling is merged through PR #5; publication of the completed consistency-review results is prepared on the current feature branch. Git operations are manual.
 
 Milestone 2 subtotal: **8.5–16 hours**, rounded planning allowance **9–16 hours**. Overall estimate remains **15–25 hours** of active work including learning and human review. Model downloads, CPU-only evaluation wall time, dependency problems and waiting for review may extend elapsed time. Re-estimate model runtime after the pilot instead of promising unmeasured throughput.
 
@@ -190,9 +190,9 @@ Milestone 2 subtotal: **8.5–16 hours**, rounded planning allowance **9–16 ho
 
 ## Next checkpoint
 
-Use the [consistency human-review worksheet](consistency-human-review.md) to assess the nine saved responses independently by repeat and enter 27 judgments with reasons. Generate a comparison that reports trial-specific decisions and coverage. The ten-case manual review remains complete, and original model outputs and scores are preserved.
+Inspect and publish the [completed consistency review](consistency-human-review.md) and its three evidence files. Both manual reviews now include written reasons: ten pilot answers with 25/30 judge matches, and nine consistency responses with 24/27 matches. Keep the rates separate because the questions overlap and the repeated measurements are correlated. Original model outputs, scores and local reviews are preserved.
 
-After reviewing consistency disagreements, record the pilot calibration decision and freeze settings before preparing the separate final 50-case set. Exclude pilot source IDs and contexts from that set. Prior exposure to AI findings remains disclosed; independent blinded review would provide additional validation. Git operations remain manual.
+Next, record the judge-calibration decision and freeze settings before preparing the separate final 50-case set. Exclude pilot source IDs and contexts from that set. Prior exposure remains disclosed; independent blinded review would provide additional validation. Git operations remain manual.
 
 ## First measured answer-model baseline
 

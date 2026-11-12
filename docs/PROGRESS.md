@@ -1,6 +1,6 @@
 # Project progress
 
-Updated: 12 November 2026. Current status: the ten-case manual review is complete, with 30/30 written reasons and 25/30 local-judge matches. Human-review tooling for nine consistency responses is implemented; its 27 human ratings remain pending. Final evaluation has not started. Earlier entries are historical checkpoints.
+Updated: 12 November 2026. Current status: both manual reviews are complete. The ten-case pilot has 30 written reasons and 25/30 judge matches; the nine consistency responses have 27 written reasons and 24/27 judge matches. Their observations overlap, so the results are reported separately. Final evaluation has not started. Earlier entries are historical checkpoints.
 
 ## Completed
 
@@ -21,7 +21,7 @@ Updated: 12 November 2026. Current status: the ten-case manual review is complet
 
 ## Remaining work
 
-1. Enter the 27 human judgments and reasons for the nine saved consistency responses, compare them with the judge and inspect disagreements.
+1. Inspect and publish the completed consistency human-review evidence and updated documentation using manual Git steps.
 2. Record the pilot calibration decision before freezing final evaluation settings.
 3. Prepare the separate final 50-case set with pilot source IDs and contexts excluded, then run the final evaluation.
 4. Complete remaining real-model regression coverage, reporting and final analysis.
@@ -33,7 +33,7 @@ The screenshots show 16 GB installed RAM (15.7 GB usable) with 1.9 GB available 
 
 ## Publication status
 
-The baseline, human-review tooling, offline CI, response-consistency experiment and completed ten-case manual review are published in [the GitHub repository](https://github.com/ibne86/llm-evaluation); PR #4 was merged into main. The user created `codex/consistency-human-review` for the next feature. This branch adds review support for saved repeats; actual consistency ratings are still pending. Commits, pushes, merges and branch cleanup remain manual. Working reviews and generated runs remain ignored; the final 50-case dataset has not been prepared.
+The baseline, offline CI, response-consistency experiment, ten-case manual review and consistency human-review tooling are published in [the GitHub repository](https://github.com/ibne86/llm-evaluation); PR #5 was merged into main. The user created `codex/consistency-review-results` to publish the completed consistency review and its findings. Both sets of human judgments and reasons are complete. Commits, pushes, merges and branch cleanup remain manual. Original working reviews and runs remain ignored; the separate final 50-case dataset has not been prepared.
 
 ## Step 2a: Ollama application
 
@@ -199,3 +199,11 @@ Both original models remain unchanged. The qwen3:4b judge passed two native sche
 - Prepared the real nine-response local worksheet with 27 null verdicts, empty reasons and declared prior exposure. No human ratings were invented or copied, and no completed human agreement is claimed.
 - Validation: 127 offline tests passed, including 31 new checks for repeated identities, duplicated/missing trials, changed evidence, metadata, response hashes, incomplete sources, trial-specific grading, reason policies, reordered reviews and CLI preservation. The original 96 tests still pass.
 - Next: the user reviews all nine responses and supplies 27 judgments/reasons, then generates a fresh human-versus-local-judge comparison. Original pilot and consistency measurements and existing manual reviews remain unchanged.
+
+## Consistency human review completed — publication prepared
+
+- Ibne submitted nine trial reviews with 27 pass/fail judgments and 27 written reasons. All trial identities, source evidence, rubric and prior-exposure metadata pass validation. No ratings or reasons were supplied or rewritten by the assistant during publication preparation.
+- Human/local-judge agreement is 24/27 (88.9%): relevancy 7/9, correctness 8/9, groundedness 9/9. The three disagreements concern county-answer relevancy on repeats 2 and 3 and opening-time correctness on repeat 1. Original judge scores and explanations are preserved.
+- The human review passes all three criteria on six trials and flags three county-answer trials, while the original automated run records five passes and four flags. Completion, agreement and quality outcomes remain distinct. The ten-case pilot's 25/30 agreement is reported separately; overlapping and repeated observations are not pooled into an accuracy estimate.
+- Prepared publishable worksheet and JSON/Markdown comparison copies, rebased evidence links and updated current documentation. Verified source/worksheet fingerprints, all paired decisions, written-reason coverage, original local files, relative links and table rendering. Reproduced the report offline; no model inference or executable-code changes were needed. The last offline suite result remains 127 passed.
+- The user created codex/consistency-review-results from clean main. Next: inspect and publish this focused update manually, then record the judge-calibration decision and freeze settings before preparing the separate final 50-case set. Both reviews remain non-blinded; independent blinded review would provide additional validation.
