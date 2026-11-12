@@ -40,21 +40,54 @@ def _probability(value):
     return type(value) in (int, float) and math.isfinite(value) and 0 <= value <= 1
 
 
+def _identity(case_id, repeat=None):
+    return case_id if repeat is None else (case_id, repeat)
+
+
+def _trial_fields(case_id, repeat):
+    if repeat is None:
+        return {}
+    return {"repeat": repeat, "trial_id": f"{case_id}::repeat-{repeat}"}
+
+
 def _source_rows(state):
     if not isinstance(state, dict) or not isinstance(state.get("run_id"), str) or not state["run_id"]:
         raise ValueError("Source must be a saved evaluation run with a run_id.")
     rows = state.get("results")
     if not isinstance(rows, list) or not rows:
         raise ValueError("Source must contain completed evaluation results.")
-    if state.get("metadata", {}).get("case_count") != len(rows):
-        raise ValueError("Source case count does not match its results.")
+    consistency = state.get("run_type") == "response_consistency"
+    if consistency:
+        from llm_eval.consistency import validate_trials
+
+        try:
+            if type(state.get("schema_version")) is not int:
+                raise ValueError("Consistency source schema_version must be an integer.")
+            validate_trials(state)
+            expected_counts = {
+                "case_count": len(state["cases"]), "trial_count": len(rows),
+                "repeat_count": state["plan"]["repeats"],
+            }
+            if any(type(state["metadata"].get(key)) is not int or state["metadata"][key] != value
+                   for key, value in expected_counts.items()):
+                raise ValueError("Consistency source counts differ from its trial matrix.")
+        except (KeyError, TypeError, AttributeError, ValueError) as error:
+            raise ValueError(f"Invalid consistency source: {error}") from error
+    else:
+        if state.get("run_type") is not None or any("repeat" in row for row in rows):
+            raise ValueError("Repeated responses require a response_consistency source.")
+        if state.get("metadata", {}).get("case_count") != len(rows):
+            raise ValueError("Source case count does not match its results.")
     ids = set()
     for row in rows:
         case, generation = row.get("case", {}), row.get("generation", {})
         case_id = case.get("case_id")
-        if not isinstance(case_id, str) or not case_id or case_id in ids:
-            raise ValueError("Source contains missing or duplicate case IDs.")
-        ids.add(case_id)
+        if not isinstance(case_id, str) or not case_id:
+            raise ValueError("Source contains a missing or invalid case ID.")
+        identity = _identity(case_id, row.get("repeat"))
+        if identity in ids:
+            raise ValueError("Source contains duplicate response identities.")
+        ids.add(identity)
         if any(not isinstance(case.get(key), str) or not case[key].strip()
                for key in ("question", "context", "category")):
             raise ValueError(f"Missing question, context or category: {case_id}.")
@@ -92,6 +125,7 @@ def create_review(state, *, reason_policy="required"):
             **{key: copy.deepcopy(case[key]) for key in (
                 "case_id", "question", "context", "expected_answers", "category", "expects_abstention"
             )},
+            **_trial_fields(case["case_id"], row.get("repeat")),
             "actual_response": row["generation"]["actual_response"],
             "decisions": {name: {"verdict": None, "reason": ""} for name in METRICS},
         })
@@ -117,6 +151,15 @@ def create_review(state, *, reason_policy="required"):
             "Use pass, fail or uncertain; null means not reviewed. Written reasons are optional; "
             "leave reason empty when no explanation was collected. Do not invent explanations. "
             "Set prior_exposure to none or scores_or_findings_seen. Do not edit evidence or rubric."
+        )
+    if state.get("run_type") == "response_consistency":
+        packet.update(
+            schema_version=2, source_run_type="response_consistency",
+            case_count=len(state["cases"]), trial_count=len(rows), repeats=state["plan"]["repeats"],
+        )
+        packet["instructions"] += (
+            " Review each saved repeat separately. Preserve case_id, repeat and trial_id; "
+            "do not copy ratings automatically between repeated responses."
         )
     return packet
 
@@ -157,15 +200,18 @@ def _validate_rows(state, rows, *, require_reasons):
     expected_rows = create_review(state)["reviews"]
     if not isinstance(rows, list) or len(rows) != len(expected_rows):
         raise ValueError("Review must retain every selected case exactly once.")
-    expected_by_id = {row["case_id"]: row for row in expected_rows}
+    expected_by_id = {_identity(row["case_id"], row.get("repeat")): row for row in expected_rows}
     by_id, has_decisions = {}, False
     for row in rows:
         if not isinstance(row, dict) or not isinstance(row.get("case_id"), str):
             raise ValueError("Review rows must contain a case ID.")
         case_id = row["case_id"]
-        if case_id not in expected_by_id or case_id in by_id:
-            raise ValueError("Review contains an unknown or duplicate case ID.")
-        original = expected_by_id[case_id]
+        if "repeat" in row and type(row["repeat"]) is not int:
+            raise ValueError("Review repeat must be an integer.")
+        identity = _identity(case_id, row.get("repeat"))
+        if identity not in expected_by_id or identity in by_id:
+            raise ValueError("Review contains an unknown or duplicate response identity.")
+        original = expected_by_id[identity]
         if (row.keys() != original.keys()
                 or any(row[key] != value for key, value in original.items() if key != "decisions")):
             raise ValueError(f"Review evidence changed: {case_id}.")
@@ -180,19 +226,21 @@ def _validate_rows(state, rows, *, require_reasons):
                 has_decisions = True
                 if require_reasons and not decision["reason"].strip():
                     raise ValueError(f"Every human decision needs a reason: {case_id}.")
-        by_id[case_id] = row
+        by_id[identity] = row
     return by_id, has_decisions
 
 
 def compare_review(state, packet):
     """Pair only explicit pass/fail labels; missing/uncertain labels never count as failures."""
     reviews = _validate_review(state, packet)
+    consistency = state.get("run_type") == "response_consistency"
+    case_numbers = {case["case_id"]: number for number, case in enumerate(state["cases"], 1)} if consistency else {}
     totals, disagreements = {}, []
     for name in METRICS:
         counts = Counter()
         for row in state["results"]:
             case_id = row["case"]["case_id"]
-            human = reviews[case_id]["decisions"][name]
+            human = reviews[_identity(case_id, row.get("repeat"))]["decisions"][name]
             verdict = human["verdict"]
             if verdict is None or verdict == "uncertain":
                 counts["unreviewed" if verdict is None else "uncertain"] += 1
@@ -206,6 +254,7 @@ def compare_review(state, packet):
             else:
                 disagreements.append({
                     "case_id": case_id, "metric": name,
+                    **_trial_fields(case_id, row.get("repeat")),
                     **{key: copy.deepcopy(row["case"][key]) for key in (
                         "question", "context", "expected_answers"
                     )},
@@ -232,11 +281,12 @@ def compare_review(state, packet):
     for number, row in enumerate(state["results"], 1):
         case_id = row["case"]["case_id"]
         for name in METRICS:
-            human = reviews[case_id]["decisions"][name]
+            human = reviews[_identity(case_id, row.get("repeat"))]["decisions"][name]
             judge = row["metrics"][name]
             judge_verdict = "pass" if judge["passed"] else "fail"
             comparison = {
-                "case_number": number, "case_id": case_id, "question": row["case"]["question"],
+                "case_number": case_numbers.get(case_id, number), "case_id": case_id,
+                **_trial_fields(case_id, row.get("repeat")), "question": row["case"]["question"],
                 "metric": name, "human_verdict": human["verdict"], "human_reason": human["reason"],
                 "judge_verdict": judge_verdict, "judge_score": judge["score"],
                 "judge_threshold": judge["threshold"], "judge_reason": judge.get("reason", ""),
@@ -244,6 +294,8 @@ def compare_review(state, packet):
                     human["verdict"] == judge_verdict if human["verdict"] in ("pass", "fail") else None
                 ),
             }
+            if consistency:
+                comparison["trial_number"] = number
             comparisons.append(comparison)
     report = {
         "schema_version": 1, "evaluation_type": "human_vs_local_judge",
@@ -272,6 +324,27 @@ def compare_review(state, packet):
             "record disagreement investigations separately."
         ),
     }
+    if consistency:
+        fully_reviewed_questions = 0
+        for case in state["cases"]:
+            trial_reviews = {
+                repeat: reviews[_identity(case["case_id"], repeat)]
+                for repeat in range(1, state["plan"]["repeats"] + 1)
+            }
+            fully_reviewed_questions += _review_status(trial_reviews) == "complete"
+        report.update(
+            schema_version=2, evaluation_type="human_vs_local_judge_consistency",
+            source_run_type="response_consistency", selected_cases=len(state["cases"]),
+            fully_reviewed_cases=fully_reviewed_questions, selected_trials=len(reviews),
+            fully_reviewed_trials=complete_cases, repeats_per_case=state["plan"]["repeats"],
+        )
+        report["interpretation"] = (
+            "Agreement is matching human/judge trial-metric decisions divided by explicit paired "
+            "pass/fail decisions, not model accuracy or proof of judge validity. Unreviewed and "
+            "uncertain labels are excluded and reduce coverage. Repeats of the same question and "
+            "the three metrics from each response are correlated observations, not independent samples. "
+            "Prior exposure can bias ratings. Keep original labels and investigate disagreements separately."
+        )
     return report
 
 
@@ -279,11 +352,18 @@ def comparison_markdown(report):
     def percentage(value):
         return "not available" if value is None else f"{value:.1%}"
 
+    consistency = report.get("source_run_type") == "response_consistency"
+    coverage = (
+        f"fully reviewed trials: {report['fully_reviewed_trials']}/{report['selected_trials']}; "
+        f"fully reviewed questions: {report['fully_reviewed_cases']}/{report['selected_cases']}"
+        if consistency else
+        f"fully reviewed cases: {report['fully_reviewed_cases']}/{report['selected_cases']}"
+    )
     lines = [
-        "# Human versus local LLM judge review", "",
+        "# Human versus local LLM judge review" + (" — consistency trials" if consistency else ""), "",
         f"- Source run: `{report['source_run_id']}`.",
         f"- Reviewer: {report['reviewer'] or 'not provided'}.",
-        f"- Status: {report['status']}; fully reviewed cases: {report['fully_reviewed_cases']}/{report['selected_cases']}.",
+        f"- Status: {report['status']}; {coverage}.",
         f"- Prior exposure: {report['prior_exposure'] or 'not declared'}.",
         f"- Paired metric decisions: {report['paired_decisions']}/{report['possible_pairs']}; "
         f"agreement: {report['agreements']}/{report['paired_decisions']} "
@@ -298,18 +378,27 @@ def comparison_markdown(report):
         lines.append(f"| {name} | {metric['paired']} | {metric['agreements']} | "
                      f"{percentage(metric['agreement_rate'])} | {metric['unreviewed']} | {metric['uncertain']} |")
     lines.extend(["", "## Individual decisions", ""])
-    lines.extend(["| Case | Metric | Human | Local judge |",
-                  "| ---: | --- | --- | --- |"])
+    if consistency:
+        lines.extend(["| Question | Repeat | Metric | Human | Local judge |",
+                      "| ---: | ---: | --- | --- | --- |"])
+    else:
+        lines.extend(["| Case | Metric | Human | Local judge |",
+                      "| ---: | --- | --- | --- |"])
     for row in report["comparisons"]:
-        cells = [str(row["case_number"]), row["metric"], row["human_verdict"] or "not reviewed",
-                 row["judge_verdict"]]
+        cells = [str(row["case_number"])]
+        if consistency:
+            cells.append(str(row["repeat"]))
+        cells.extend([row["metric"], row["human_verdict"] or "not reviewed", row["judge_verdict"]])
         lines.append("| " + " | ".join(cells) + " |")
     lines.extend(["", "## Disagreements", ""])
     if not report["disagreements"]:
         lines.append("No disagreements among paired decisions. Unreviewed decisions are not agreements.")
     for disagreement in report["disagreements"]:
+        identity = disagreement["case_id"]
+        if consistency:
+            identity += f" / repeat {disagreement['repeat']}"
         lines.extend([
-            f"### {disagreement['case_id']} / {disagreement['metric']}", "",
+            f"### {identity} / {disagreement['metric']}", "",
             f"Question: {disagreement['question']}", "",
             f"Actual response: {disagreement['actual_response']}", "",
             f"Human: **{disagreement['human_verdict']}**. "

@@ -25,7 +25,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     prepare = commands.add_parser("prepare", help="Create a review without judge scores or reasons.")
-    prepare.add_argument("--results", required=True, help="Saved results.json file.")
+    prepare.add_argument("--results", required=True, help="Saved pilot or response-consistency results JSON.")
     prepare.add_argument("--output", required=True, help="New review JSON file.")
     prepare.add_argument("--reason-policy", choices=("required", "optional"), default="required",
                          help="Use optional when written explanations will not be collected.")
@@ -39,7 +39,11 @@ def main(argv=None):
         if args.command == "prepare":
             packet = create_review(state, reason_policy=args.reason_policy)
             _new_file(args.output, json.dumps(packet, ensure_ascii=False, indent=2) + "\n")
-            print(f"Prepared {len(packet['reviews'])} cases with no human labels: {args.output}")
+            if packet.get("source_run_type") == "response_consistency":
+                print(f"Prepared {packet['trial_count']} trials across {packet['case_count']} questions "
+                      f"with no human labels: {args.output}")
+            else:
+                print(f"Prepared {len(packet['reviews'])} cases with no human labels: {args.output}")
         else:
             report = compare_review(state, _read_json(args.review))
             folder = Path(args.output_dir)
