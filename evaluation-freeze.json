@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "freeze_id": "context-qa-baseline-v1",
+  "recorded_on": "2026-11-12",
+  "scope": "evaluation_protocol_only",
+  "decision": "retain_original_baseline",
+  "rationale": "Retain the original models, prompts, metric rubrics and thresholds after reviewing the development pilot and repeated responses. No judge calibration or threshold tuning was performed. Judge variability, relevance/correctness conflation and prior exposure remain reported limitations; this decision does not establish judge accuracy.",
+  "protocol_config": {
+    "prompt_version": "context-qa-v1",
+    "rubric_version": "pilot-rubrics-v1",
+    "host": "http://127.0.0.1:11434",
+    "timeout_seconds": 120,
+    "answer": {
+      "model": "qwen2.5:1.5b",
+      "options": {
+        "num_gpu": 0,
+        "num_ctx": 2048,
+        "num_predict": 96,
+        "num_batch": 32,
+        "num_thread": 4,
+        "temperature": 0,
+        "seed": 42
+      }
+    },
+    "judge": {
+      "model": "qwen3:4b",
+      "options": {
+        "num_gpu": 0,
+        "num_ctx": 4096,
+        "num_predict": 256,
+        "num_batch": 16,
+        "num_thread": 4,
+        "temperature": 0,
+        "seed": 42
+      }
+    },
+    "thresholds": {
+      "answer_relevancy": 0.7,
+      "correctness": 0.7,
+      "groundedness": 0.8
+    }
+  },
+  "recorded_ollama": {
+    "server_version": "0.40.16",
+    "model_digests": {
+      "qwen2.5:1.5b": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+      "qwen3:4b": "359d7dd4bcdab3d86b87d73ac27966f4dbb9f5efdfcc75d34a8764a09474fae7"
+    }
+  },
+  "environment": {
+    "python_major_minor": "3.12",
+    "packages": {
+      "aiohappyeyeballs": "2.7.1",
+      "aiohttp": "3.14.5",
+      "aiosignal": "1.4.0",
+      "annotated-doc": "0.0.5",
+      "annotated-types": "0.8.0",
+      "anyio": "4.16.0",
+      "attrs": "26.1.0",
+      "backoff": "2.2.1",
+      "certifi": "2026.10.23",
+      "charset-normalizer": "3.5.2",
+      "click": "8.3.3",
+      "colorama": "0.4.6",
+      "deepeval": "4.3.3",
+      "distro": "1.9.0",
+      "execnet": "2.1.2",
+      "frozenlist": "1.8.0",
+      "grpcio": "1.85.1",
+      "h11": "0.16.0",
+      "httpcore": "1.0.9",
+      "httpcore2": "2.16.0",
+      "httpx": "0.28.1",
+      "httpx2": "2.16.0",
+      "idna": "3.20",
+      "iniconfig": "2.3.1",
+      "Jinja2": "3.1.6",
+      "jiter": "0.19.0",
+      "markdown-it-py": "4.2.0",
+      "MarkupSafe": "3.0.4",
+      "mdurl": "0.1.2",
+      "multidict": "7.2.1",
+      "nest-asyncio": "1.6.0",
+      "ollama": "0.6.3",
+      "openai": "3.48.0",
+      "opentelemetry-api": "1.45.2",
+      "opentelemetry-sdk": "1.45.2",
+      "opentelemetry-semantic-conventions": "0.66b2",
+      "packaging": "26.3",
+      "pluggy": "1.7.0",
+      "portalocker": "4.4.2",
+      "posthog": "7.86.5",
+      "prompt_toolkit": "3.0.53",
+      "propcache": "0.5.4",
+      "pydantic": "2.14.3",
+      "pydantic-settings": "2.16.2",
+      "pydantic_core": "2.50.4",
+      "pyfiglet": "1.0.4",
+      "Pygments": "2.21.0",
+      "pytest": "9.2.0",
+      "pytest-asyncio": "1.4.1.post1",
+      "pytest-repeat": "0.9.4",
+      "pytest-rerunfailures": "16.7",
+      "pytest-xdist": "3.8.0",
+      "python-dotenv": "1.2.4",
+      "questionary": "2.1.1",
+      "requests": "2.34.2",
+      "rich": "14.3.4",
+      "setuptools": "84.2.1",
+      "shellingham": "1.5.4",
+      "sniffio": "1.3.1",
+      "tabulate": "0.9.0",
+      "tenacity": "9.2.1",
+      "tqdm": "4.70.1",
+      "truststore": "0.10.5",
+      "typer": "0.29.0",
+      "typing-inspection": "0.4.5",
+      "typing_extensions": "4.16.0",
+      "urllib3": "2.8.0",
+      "wcwidth": "0.9.4",
+      "wheel": "0.48.0",
+      "yarl": "1.25.1"
+    }
+  },
+  "text_sha256": {
+    "src/llm_eval/ollama_client.py": "540eb68fbe272f48a893319d18b6e9608de34af1f2120a0df97f9408cd4c5c5c",
+    "src/llm_eval/judge.py": "d49d59c897eb5ab8eadc42d84c442a0d7b02918f1304beb740f8d260c566a0b2",
+    "src/llm_eval/metrics.py": "a46895a0623544339233849ef0ae504969ca09729bef923a44194739a77534f2",
+    "requirements.txt": "2b1738500bebce79078df47923bc12210b870fba92db2aabadb1ad1c6991911f",
+    "requirements-lock.txt": "c902e48e75d09ef888228a75d4463804a5daf6ade253d6487b9e5b72b73757b7"
+  },
+  "evidence_sha256": {
+    "data/pilot.json": "7488eadb46679042a027ad5c62f05b74986fecd8a191a93e64e9baeb67b27f0e",
+    "results/examples/pilot-results.json": "638e93e1b6a6a9d50ba65f18a2b50d997c0bda346edd2b801c3f28fe6ed63406",
+    "results/examples/pilot-human-review-with-reasons.json": "7783771d84896179a2e15fbeb8b0d433c91a66fbfbac850264f5cd674f136234",
+    "results/examples/pilot-human-comparison-with-reasons.json": "5309a57528623d19b6286683c60a87985357050af254de99feb12455e2a478fe",
+    "results/examples/consistency-results.json": "8d7021f840ab692c209a435d17bab360e0790b3f2160a6bb5a4096314e526348",
+    "results/examples/consistency-human-review.json": "3cb0a4ea20b720a6062997bb99d88292e4fc03e92e7945c342cd50c9249248ba",
+    "results/examples/consistency-human-comparison.json": "f6cce3ad61f53a11ec36981a73430960dc72db80aa81864dbc099038ca8a865c"
+  }
+}
