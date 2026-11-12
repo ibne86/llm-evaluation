@@ -4,7 +4,7 @@ A Python QA project that evaluates an existing local language model with pytest,
 
 ## Current status
 
-The ten-case pilot and nine-response consistency experiment are complete. Offline harness tests: **127 passed**. Ibne completed both manual reviews, including a written reason for every judgment:
+The ten-case pilot and nine-response consistency experiment are complete. Offline harness tests: **147 passed**. Ibne completed both manual reviews, including a written reason for every judgment:
 
 | Manual review | Questions | Responses | Judgments with reasons | Human/judge matches |
 | --- | ---: | ---: | ---: | ---: |
@@ -19,6 +19,18 @@ The original models remain unchanged:
 | --- | --- | --- |
 | System under test | `qwen2.5:1.5b` | Q4_K_M |
 | Judge | `qwen3:4b` | Q4_K_M |
+
+## Evaluation freeze
+
+The judge decision is to retain the original baseline, with its observed grading limitations documented. No prompts, models or thresholds were tuned. [The protocol record](evaluation-freeze.json) binds the settings, inference/scoring source, pinned dependency snapshot and completed development evidence. See the [decision and freeze guide](docs/evaluation-freeze.md).
+
+Check the protocol and installed packages offline:
+
+```powershell
+python scripts/check_evaluation_freeze.py
+```
+
+This check makes no model calls. It does not validate today's Ollama service/model weights or freeze the final dataset; final-runner integration and separate dataset validation are next.
 
 ## Architecture
 
@@ -181,6 +193,6 @@ Original run snapshots retain their earlier review status. Limitations include p
 
 ## Remaining milestones
 
-Next: record the judge-calibration decision, freeze final evaluation settings, prepare the separate 50-case set and complete the final analysis. Both manual reviews and their written reasons are complete. The completed non-blinded manual review is documented above; independent blinded validation remains outstanding. Completed consistency-review evidence and documentation are prepared on this branch for publication. Git commits, pushes, merges and branch cleanup remain manual.
+The completed consistency review is merged into main (`2166ec1`). The judge decision and protocol freeze are now recorded locally with an offline drift check. Next: prepare and validate the separate 50-case set, integrate the freeze and actual model/version checks into its runner, complete real-model regression coverage, and produce the final analysis. Both manual reviews and their written reasons are complete; independent blinded review remains additional validation. Git commits, pushes, merges and branch cleanup remain manual.
 
 Progress is tracked in [PROGRESS.md](docs/PROGRESS.md) and the [project plan](docs/PROJECT_PLAN.md). A software license has not yet been selected. Dataset material is CC BY-SA 4.0; model licenses are separate, and model files are not included in the repository.
