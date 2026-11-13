@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "dataset_file": "final.json",
+  "hash_algorithm": "canonical-json-sha256-v1",
+  "dataset_sha256": "045889ac4e7b2390fa1d465deae1c710ab6b3caa7196c80087e3ff5ed0104747",
+  "case_count": 50,
+  "categories": {
+    "answerable": 30,
+    "unanswerable": 10,
+    "ambiguity": 5,
+    "instruction_in_context": 5
+  },
+  "selection_version": "final-selection-v1",
+  "selection_seed": 42,
+  "source_sha256": "80a5225e94905956a6446d296ca1093975c4d3b3260f1d6c8f68bc2ab77182d8",
+  "pilot_sha256": "7488eadb46679042a027ad5c62f05b74986fecd8a191a93e64e9baeb67b27f0e",
+  "custom_cases_sha256": "02fa0caceec9346ab30288997d903f03a1304b15963abb93ffe96673cfc2417f",
+  "evaluation_freeze_sha256": "bfbc3d793b60cdc870e73825a767f92ccd902a478066b54306398186260e9e7b"
+}
