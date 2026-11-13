@@ -1,6 +1,6 @@
 # Project progress
 
-Updated: 12 November 2026. Current status: both manual reviews are complete. The ten-case pilot has 30 written reasons and 25/30 judge matches; the nine consistency responses have 27 written reasons and 24/27 judge matches. Their observations overlap, so the results are reported separately. Final evaluation has not started. Earlier entries are historical checkpoints.
+Updated: 13 November 2026. Current status: both manual reviews are complete. The ten-case pilot has 30 written reasons and 25/30 judge matches; the nine consistency responses have 27 written reasons and 24/27 judge matches. Their observations overlap, so the results are reported separately. The protocol freeze is published, and the final 50-case inputs and manifest are prepared locally. Final model evaluation has not started. Earlier entries are historical checkpoints.
 
 ## Completed
 
@@ -21,9 +21,9 @@ Updated: 12 November 2026. Current status: both manual reviews are complete. The
 
 ## Remaining work
 
-1. Review and publish the evaluation decision, protocol record and offline drift checker using manual Git steps.
-2. Prepare the separate final 50-case set with pilot source IDs and contexts excluded, validate it and record its hash before inference.
-3. Add final-runner support with protocol verification, actual local server/model digest checks and recorded freeze/dataset fingerprints; then run the final evaluation.
+1. Review and publish the final dataset, synthetic fixtures, manifest, preparation/validation command and documentation using manual Git steps.
+2. Add final-runner and report support with protocol/input verification, actual local server/model digest checks and recorded freeze/dataset fingerprints.
+3. Complete real-model preflight/regression checks and run the final evaluation without changing selected inputs or frozen settings in response to outcomes.
 4. Complete remaining real-model regression coverage, reporting and final analysis.
 5. Finish portfolio documentation and publication. Independent blinded review remains an additional validation option; the present manual review's prior exposure is disclosed.
 
@@ -33,7 +33,7 @@ The screenshots show 16 GB installed RAM (15.7 GB usable) with 1.9 GB available 
 
 ## Publication status
 
-The baseline, offline CI, response-consistency experiment and both completed human reviews are published in [the GitHub repository](https://github.com/ibne86/llm-evaluation). The user merged the consistency review, updated local main to `2166ec1`, deleted the completed branch locally/remotely and confirmed a clean working tree. The user then created `codex/evaluation-freeze`; its new decision record, offline checker and documentation are local preparation for the next publication. Commits, pushes, merges and branch cleanup remain manual. Original working reviews and runs remain ignored; the separate final 50-case dataset has not been prepared.
+The baseline, offline CI, development experiments/reviews and protocol-freeze increment are published in [the GitHub repository](https://github.com/ibne86/llm-evaluation). The user merged the freeze increment, updated main to `081ac19`, deleted the completed branch locally/remotely and confirmed a clean working tree. The user then created `codex/final-evaluation-dataset`; the new 50-case inputs, manifest, validator and documentation are local preparation for publication. Commits, pushes, merges and branch cleanup remain manual. Original reviews and runs remain ignored; final model evaluation has not started.
 
 ## Step 2a: Ollama application
 
@@ -215,3 +215,12 @@ Both original models remain unchanged. The qwen3:4b judge passed two native sche
 - Added an offline command that checks configuration, source/dependency drift, preserved evidence and installed package versions. It reports mismatches with a nonzero status; Windows checkout line endings and JSON layout do not invalidate unchanged content. It never updates the record automatically.
 - The checker does not contact Ollama, validate current model weights, freeze unprepared data or change the existing pilot/consistency runners. Final-dataset preparation and final-runner integration, including actual server/digest validation and recorded freeze/dataset fingerprints, remain next.
 - Validation: 147 offline tests passed (the original 127 plus 20 new freeze checks), including configuration drift, changed scoring code, human-reason edits, dependency/runtime mismatches, CLI errors and Windows/JSON portability. The command, links and file-preservation checks are also verified. Original source files, configuration, model outputs and user review words remain unchanged. Git operations remain manual.
+
+## Final 50-case inputs prepared — 13 November 2026
+
+- Selected 30 answerable and 10 impossible questions from the pilot's pinned SQuAD source, with seed 42 and fixed short-context limits. Preserved questions, full contexts, every source answer span, deduplicated aliases, impossible-question provenance and attribution.
+- Added five synthetic ambiguity and five synthetic embedded-instruction fixtures, labeled as AI-assisted project data rather than SQuAD questions or human ratings. There are 15 abstention expectations across all final inputs.
+- All 50 contexts are distinct. All eight pilot source IDs and ten pilot context hashes are excluded. The 40 SQuAD cases cover all 35 source articles; five articles appear twice with different contexts. Article overlap with the pilot remains possible and is disclosed.
+- Recorded the canonical dataset fingerprint `045889ac4e7b2390fa1d465deae1c710ab6b3caa7196c80087e3ff5ed0104747`, plus pilot, custom-fixture and unchanged protocol-freeze fingerprints in the separate manifest. Preparation is deterministic, uses no model results and refuses existing outputs.
+- Added offline preparation, manifest validation and optional full-source reproduction. Validation can run from checked-in files without the raw download or Ollama. Checked all 40 original source records and preflighted all 50 answer/metric prompts without inference; 171 offline tests passed, including 24 new dataset checks. Published-input validation, full-source reproduction, non-overwriting preparation, documentation links and original-file preservation are verified.
+- Original pilot, protocol record, configuration, inference/scoring files, model outputs and human reasons are preserved. Existing evaluation runners remain pilot-only. Next: inspect/publish manually, then implement final-runner/report support and actual local model/server checks.

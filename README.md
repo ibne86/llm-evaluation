@@ -4,7 +4,7 @@ A Python QA project that evaluates an existing local language model with pytest,
 
 ## Current status
 
-The ten-case pilot and nine-response consistency experiment are complete. Offline harness tests: **147 passed**. Ibne completed both manual reviews, including a written reason for every judgment:
+The ten-case pilot and nine-response consistency experiment are complete. Offline harness tests: **171 passed**. Ibne completed both manual reviews, including a written reason for every judgment:
 
 | Manual review | Questions | Responses | Judgments with reasons | Human/judge matches |
 | --- | ---: | ---: | ---: | ---: |
@@ -30,7 +30,7 @@ Check the protocol and installed packages offline:
 python scripts/check_evaluation_freeze.py
 ```
 
-This check makes no model calls. It does not validate today's Ollama service/model weights or freeze the final dataset; final-runner integration and separate dataset validation are next.
+This check makes no model calls and does not validate today's Ollama service/model weights. The separate [final-input validator](docs/final-dataset.md) now checks the 50-case dataset and its manifest; final-runner integration and actual local model/server checks are next.
 
 ## Architecture
 
@@ -78,9 +78,19 @@ For PyCharm, select the existing `.venv\Scripts\python.exe` interpreter. See the
 
 The included development pilot has six answerable and two unanswerable SQuAD 2.0 questions, plus two custom cases covering ambiguous identity and instructions embedded in context. The source selection uses seed 42, eight distinct articles and complete short contexts. Original IDs, answer spans, aliases, selection criteria and source hash are retained.
 
-The pilot is separate from the eventual 50-case evaluation set. Its source IDs and context hashes are recorded for exclusion from that final set. No model is trained, so no new training/validation/test split is created.
+The pilot is separate from the prepared 50-case evaluation set. Its source IDs and complete context hashes are excluded from that set. No model is trained, so no new training/validation/test split is created.
 
 See the [dataset card](data/DATASET_CARD.md), [pilot JSON](data/pilot.json), and [data license notice](data/LICENSE-SQUAD.txt). The raw source is ignored by Git. The preparation script refuses to silently overwrite an existing selected pilot.
+
+The final inputs contain **30 answerable SQuAD cases, 10 impossible SQuAD cases, five synthetic ambiguity cases and five synthetic embedded-instruction cases**. All 50 contexts are distinct, and the SQuAD cases cover all 35 source articles. The ten synthetic cases are AI-assisted project fixtures, with explicit authorship; the 40 SQuAD questions/references are copied unchanged. No final inference has run.
+
+Read the [final dataset card](data/FINAL_DATASET_CARD.md), [selected inputs](data/final.json), [manifest](data/final-manifest.json), [custom fixtures](data/final-custom-cases.json) and [preparation guide](docs/final-dataset.md). Validate the checked-in inputs offline:
+
+```powershell
+python scripts/prepare_final_dataset.py validate
+```
+
+Add `--source data/raw/dev-v2.0.json` when the cached publisher snapshot is available to reproduce the complete selection. Both commands verify the protocol first and make no model calls. The existing evaluation runner still accepts only the ten-case pilot; final-runner support is next.
 
 ## Execute tests and evaluation
 
@@ -193,6 +203,6 @@ Original run snapshots retain their earlier review status. Limitations include p
 
 ## Remaining milestones
 
-The completed consistency review is merged into main (`2166ec1`). The judge decision and protocol freeze are now recorded locally with an offline drift check. Next: prepare and validate the separate 50-case set, integrate the freeze and actual model/version checks into its runner, complete real-model regression coverage, and produce the final analysis. Both manual reviews and their written reasons are complete; independent blinded review remains additional validation. Git commits, pushes, merges and branch cleanup remain manual.
+The protocol-freeze increment is merged into main (`081ac19`). The separate final 50-case inputs, synthetic fixtures, manifest and offline validator are now prepared locally. Next: add final-runner/report support that verifies the frozen protocol, selected inputs and actual model/server identities, records both fingerprints and runs the final evaluation. Real-model regression coverage and final analysis remain pending. Both development reviews and their written reasons are complete; independent blinded review remains additional validation. Git commits, pushes, merges and branch cleanup remain manual.
 
 Progress is tracked in [PROGRESS.md](docs/PROGRESS.md) and the [project plan](docs/PROJECT_PLAN.md). A software license has not yet been selected. Dataset material is CC BY-SA 4.0; model licenses are separate, and model files are not included in the repository.

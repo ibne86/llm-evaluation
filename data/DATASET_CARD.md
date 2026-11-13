@@ -37,7 +37,7 @@ The two custom fixtures are project-authored and also licensed CC BY-SA 4.0. The
 
 ## Evaluation separation
 
-`pilot.json` is immutable test input. Actual responses and scores belong in run outputs linked by case ID. The metadata records source IDs and context hashes to exclude from the later final set. No final set has been selected. Avoid repeatedly tuning against the eventual final evaluation cases.
+`pilot.json` is immutable test input. Actual responses and scores belong in run outputs linked by case ID. The metadata records source IDs and context hashes excluded from the separately prepared [final 50-case set](FINAL_DATASET_CARD.md). The pilot's original `final_evaluation_prepared: false` is a historical creation-time record and is preserved. Final inputs and their fingerprints live in separate files. Avoid tuning against final evaluation outcomes.
 
 ## Reproduction
 
